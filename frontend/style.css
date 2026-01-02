@@ -96,6 +96,8 @@ body::before {
     color: var(--primary-color);
     letter-spacing: 2px;
     animation: pulse 1s infinite;
+    text-align: center;
+    /* Ensure text is centered */
 }
 
 @keyframes flyUp {
