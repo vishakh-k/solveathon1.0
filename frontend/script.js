@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Entry Animation
     tl.to(jet, {
-        duration: 1.0, // Speed up entry
+        duration: 0.6, // Super fast entry
         opacity: 1,
         scale: 1,
         ease: "power2.out"
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Idle Animation (Floating)
         .to(jet, {
             y: -15,
-            duration: 1.2, // Slightly faster idle
+            duration: 0.8, // Faster idle
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut"
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tl.kill();
 
         gsap.to(jet, {
-            duration: 0.8, // Faster launch
+            duration: 0.5, // Warp speed launch
             y: -1000,
             scale: 0.2,
             rotation: -10,
@@ -37,13 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Ensure loader background slides up after jet flies out
                 gsap.to('#loader', {
                     y: '-100%',
-                    duration: 0.5, // Faster slide up
+                    duration: 0.4, // Snappy slide up
                     ease: "power2.inOut",
                     onComplete: () => {
                         // === Homepage Animations Start Here ===
 
                         // 1. Text Animation: "SOLVE-A-THON 1.0"
-                        // Using a clip-path reveal effect for a high-tech look
                         gsap.fromTo(".main-title",
                             {
                                 clipPath: "polygon(0 0, 0 100%, 0 100%, 0 0)",
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)",
                                 opacity: 1,
                                 y: 0,
-                                duration: 1.0, // Faster text reveal
+                                duration: 0.6, // Rapid text reveal
                                 ease: "power4.out"
                             }
                         );
@@ -63,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         gsap.to(".btn", {
                             opacity: 1,
                             y: 0,
-                            duration: 0.6, // Faster button fade
-                            stagger: 0.1, // Faster stagger
+                            duration: 0.4, // Instant buttons
+                            stagger: 0.05, // Almost simultaneous
                             ease: "back.out(1.7)",
-                            delay: 0.2 // Less delay
+                            delay: 0.1 // Minimal delay
                         });
 
                         // Button Hover Animations (GSAP Interactivity)
@@ -82,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-    }, 2000); // Trigger launch after 2s (was 4.5s)
+    }, 800); // Trigger launch after just 0.8s
 
     // Hamburger Menu Logic
     const hamburger = document.querySelector('.hamburger');
