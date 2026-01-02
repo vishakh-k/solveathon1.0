@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Entry Animation
     tl.to(jet, {
-        duration: 1.5,
+        duration: 1.0, // Speed up entry
         opacity: 1,
         scale: 1,
         ease: "power2.out"
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Idle Animation (Floating)
         .to(jet, {
             y: -15,
-            duration: 1.5,
+            duration: 1.2, // Slightly faster idle
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut"
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tl.kill();
 
         gsap.to(jet, {
-            duration: 1.5,
+            duration: 0.8, // Faster launch
             y: -1000,
             scale: 0.2,
             rotation: -10,
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Ensure loader background slides up after jet flies out
                 gsap.to('#loader', {
                     y: '-100%',
-                    duration: 0.8,
+                    duration: 0.5, // Faster slide up
                     ease: "power2.inOut",
                     onComplete: () => {
                         // === Homepage Animations Start Here ===
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)",
                                 opacity: 1,
                                 y: 0,
-                                duration: 1.5,
+                                duration: 1.0, // Faster text reveal
                                 ease: "power4.out"
                             }
                         );
@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         gsap.to(".btn", {
                             opacity: 1,
                             y: 0,
-                            duration: 0.8,
-                            stagger: 0.2, // Buttons appear one after another
+                            duration: 0.6, // Faster button fade
+                            stagger: 0.1, // Faster stagger
                             ease: "back.out(1.7)",
-                            delay: 0.5 // Wait a bit after text starts
+                            delay: 0.2 // Less delay
                         });
 
                         // Button Hover Animations (GSAP Interactivity)
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-    }, 4500); // Trigger launch after 4.5s
+    }, 2000); // Trigger launch after 2s (was 4.5s)
 
     // Hamburger Menu Logic
     const hamburger = document.querySelector('.hamburger');
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section');
     sections.forEach(section => {
         section.style.opacity = '0';
-        section.style.transition = 'opacity 1s ease-in-out';
+        section.style.transition = 'opacity 0.6s ease-in-out'; // Faster fade-in
         observer.observe(section);
     });
 

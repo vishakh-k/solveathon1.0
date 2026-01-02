@@ -68,7 +68,6 @@ body::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: transform 0.8s ease-in-out;
 }
 
 .jet-container {
