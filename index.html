@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve-A-Thon 1.0 - Srinivas Institute of Technology</title>
+    <meta name="description"
+        content="Solve-A-Thon 1.0: A 24-Hour National Level Hackathon organized by the Department of MCA, Srinivas Institute of Technology.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Model Viewer Script -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <!-- GSAP Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Loading Screen -->
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="jet-container">
+            <img src="elements/loading_jet.png" alt="Loading Jet" class="loading-jet-img">
+            <div class="exhaust-flame"></div>
+        </div>
+        <h2 class="loading-text">INITIALIZING LAUNCH SEQUENCE...</h2>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">SOLVE-A-THON <span>1.0</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#rules">Details</a></li>
+            <!-- Renamed Rules to Details generally matches better, or keep Rules if preferred. User said remove team/contact -->
+            <li><a href="#" class="nav-btn">Register Now</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="hero-content">
+            <h3 class="subtitle" data-aos="fade-down">Department of MCA Organizes</h3>
+            <h1 class="main-title glitched">SOLVE-A-THON 1.0</h1>
+            <p class="tagline" data-aos="fade-up">Coding Solution for Real World Challenges</p>
+
+            <div class="event-details" data-aos="fade-up" data-aos-delay="200">
+                <div class="detail-box">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Feb 18-19, 2026</span>
+                </div>
+                <div class="detail-box">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>4th Floor Auditorium, SIT</span>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#" class="btn primary-btn glow-effect">Register Mission</a>
+                <a href="brochure/brochure.pdf" target="_blank" class="btn secondary-btn">Mission Brief</a>
+            </div>
+        </div>
+
+        <!-- 3D Model Container -->
+        <!-- 3D Model Container -->
+        <div class="model-container">
+            <model-viewer src="3D/combat_jet_animation.glb" alt="Combat Jet Animation" auto-rotate camera-controls
+                camera-target="0m 5m 0m" camera-orbit="30deg 75deg 60m" min-camera-orbit="auto auto 60m"
+                max-camera-orbit="auto auto 60m" shadow-intensity="2" autoplay exposure="1" shadow-softness="1"
+                environment-image="neutral" field-of-view="25deg" interaction-prompt="none" disable-pan
+                style="width: 100%; height: 100%;">
+            </model-viewer>
+        </div>
+
+        <div class="hero-background">
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </div>
+    </section>
+
+    <!-- Mission Separator -->
+    <div class="mission-divider">
+        <div class="divider-line"></div>
+        <i class="fa-solid fa-jet-fighter divider-jet"></i>
+    </div>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Mission</h2>
+
+            <div class="about-grid">
+                <div class="about-card glass-panel animated-bg">
+                    <div class="card-overlay"></div> <!-- For text readability -->
+                    <div class="card-content">
+                        <h3>ABOUT COLLEGE</h3>
+                        <p>Srinivas Institute of Technology (SIT) is one of the premier engineering colleges in the
+                            Mangaluru region, committed to delivering high standards of education through a holistic and
+                            student-centric approach. Recognized by AICTE and affiliated to VTU, SIT provides a vibrant
+                            academic environment hosting over 3,000 students. Our campus fosters innovation and
+                            excellence,
+                            empowering students to become future leaders in technology.</p>
+                        <ul class="about-list">
+                            <li>SIT emphasizes industry-oriented learning through hands-on projects, research
+                                initiatives, and skill development programs.</li>
+                            <li>The institution maintains strong academic-industry collaboration to enhance real-world
+                                exposure.</li>
+                            <li>A culture of discipline, innovation, and leadership defines the SIT learning ecosystem.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-card glass-panel animated-bg">
+                    <div class="card-overlay"></div>
+                    <div class="card-content">
+                        <h3>ABOUT SOLVEATHON 1.0</h3>
+                        <p>Solveathon 1.0 is a 24-hour technology-driven event designed to foster innovation,
+                            creativity, and practical problem-solving among students. It serves as a platform where
+                            participants can transform ideas into functional solutions through coding and collaboration.
+                            Join us to challenge yourself, network with industry experts, and showcase your technical
+                            prowess on a grand stage.</p>
+                        <ul class="about-list">
+                            <li>Participants will work on real-world problem statements under time-bound conditions.
+                            </li>
+                            <li>The event promotes teamwork, critical thinking, and rapid prototyping skills.</li>
+                            <li>Solveathon 1.0 aims to bridge the gap between academic learning and industry
+                                expectations.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events & Schedule Section -->
+    <section id="events">
+        <div class="container">
+            <h2 class="section-title">Mission Timeline</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-info">
+                            <h3>Inauguration</h3>
+                            <p>Launch of the 24-hour hackathon mission. Dignitaries address the gathering and officially
+                                declare the event open.</p>
+                        </div>
+                        <div class="timeline-time">
+                            <span>Feb 18<br>09:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-info">
+                            <h3>Hackathon Begins</h3>
+                            <p>Problem statements released. Teams start their engines. 24 hours of non-stop coding,
+                                innovation, and prototyping begins now.</p>
+                        </div>
+                        <div class="timeline-time">
+                            <span>Feb 18<br>10:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-info">
+                            <h3>Mentoring Rounds</h3>
+                            <p>Industry experts visit teams to guide, evaluate progress, and provide critical feedback
+                                to refine solutions.</p>
+                        </div>
+                        <div class="timeline-time">
+                            <span>Feb 18<br>04:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-info">
+                            <h3>Submission</h3>
+                            <p>Code freeze and final submissions. All repositories must be public and documentation
+                                uploaded.</p>
+                        </div>
+                        <div class="timeline-time">
+                            <span>Feb 19<br>10:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-info">
+                            <h3>Valedictory</h3>
+                            <p>Prize distribution and closing ceremony. Winners are announced and awards are presented.
+                            </p>
+                        </div>
+                        <div class="timeline-time">
+                            <span>Feb 19<br>02:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rules Section -->
+    <section id="rules">
+        <div class="container">
+            <h2 class="section-title">Protocols</h2>
+            <div class="rules-container glass-panel">
+                <ul class="rules-list">
+                    <li><i class="fa-solid fa-jet-fighter"></i> Open to all UG, PG, and Engineering students.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> <strong>Category Segregation:</strong><br>
+                        &nbsp;&nbsp;• UG Category – evaluated separately<br>
+                        &nbsp;&nbsp;• MCA/MSc/BE & Engineering Category – evaluated together</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Teams must bring and assemble their own hardware
+                        on-site.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Use of open-source libraries and frameworks is allowed;
+                        however, pre-existing code, templates, or assets are strictly prohibited.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> All development must be done only during the hackathon
+                        period.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Team size: 4 members.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Each team must submit a working prototype and deliver a
+                        PPT presentation.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Problem statements will be provided on the spot.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Plagiarism or rule violations will lead to immediate
+                        disqualification.</li>
+                    <li><i class="fa-solid fa-jet-fighter"></i> Judges’ decisions will be final and binding.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prizes & Registration Section -->
+    <section id="prizes">
+        <div class="container">
+            <h2 class="section-title">Mission Rewards</h2>
+            <div class="prizes-grid">
+                <!-- Registration Fee Card -->
+                <div class="prize-card glass-panel fee-card">
+                    <div class="card-bg" style="background-image: url('elements/4.png');"></div>
+                    <div class="card-content centered-content">
+                        <h3>Registration Fee</h3>
+                        <div class="price-tag">
+                            <span class="currency">₹</span>
+                            <span class="amount">500</span>
+                        </div>
+                        <p class="per-team">Per Team</p>
+                        <a href="#" class="btn primary-btn pulse-btn">Register Mission</a>
+                    </div>
+                </div>
+
+                <!-- Cash Prizes Card -->
+                <div class="prize-card glass-panel rewards-card">
+                    <div class="card-bg" style="background-image: url('elements/5.png');"></div>
+                    <div class="card-content">
+                        <h3>Cash Prizes</h3>
+                        <div class="prize-list">
+                            <div class="prize-category">
+                                <h4><i class="fa-solid fa-trophy"></i> BCA / BSc Category</h4>
+                                <ul>
+                                    <li><i class="fa-solid fa-jet-fighter"></i> Winner: Exciting Cash Prize</li>
+                                    <li><i class="fa-solid fa-jet-fighter"></i> Runner-Up: Exciting Cash Prize</li>
+                                </ul>
+                            </div>
+                            <div class="prize-divider"></div>
+                            <div class="prize-category">
+                                <h4><i class="fa-solid fa-trophy"></i> MCA / MSc / BE Category</h4>
+                                <ul>
+                                    <li><i class="fa-solid fa-jet-fighter"></i> Winner: Exciting Cash Prize</li>
+                                    <li><i class="fa-solid fa-jet-fighter"></i> Runner-Up: Exciting Cash Prize</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <a href="#home" class="back-to-top" id="backToTop">
+        <img src="elements/plane.png" alt="Fly Top">
+    </a>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="container">
+            <h2 class="section-title">Mission Control</h2>
+            <div class="team-grid">
+                <div class="team-card glass-panel">
+                    <h3>Dr. Srinivasa Mayya D</h3>
+                    <p>Chief Convener</p>
+                    <p class="role">Principal</p>
+                </div>
+                <div class="team-card glass-panel">
+                    <h3>Dr. Shashidhar Kini K</h3>
+                    <p>Convener</p>
+                    <p class="role">HOD</p>
+                </div>
+                <div class="team-card glass-panel">
+                    <h3>Mr. Rajesh Naik</h3>
+                    <p>Staff Coordinator</p>
+                </div>
+                <div class="team-card glass-panel">
+                    <h3>Mr. Chinthan Rai</h3>
+                    <p>Student Coordinator</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Establish Contact</h2>
+            <div class="contact-wrapper glass-panel">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <p>0824-2274730, 2274732</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <p>principal@sitmng.ac.in</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-globe"></i>
+                        <p>sitmng.ac.in</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <p>Valachil, Post Farangipete, Mangalore - 574143</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Solve-A-Thon 1.0 | Department of MCA, SIT</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
