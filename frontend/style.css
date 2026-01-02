@@ -959,6 +959,16 @@ footer {
         letter-spacing: 3px;
     }
 
+    .nav-logo-img {
+        height: 35px;
+        /* Adjust for mobile */
+    }
+
+    .logo {
+        font-size: 1.2rem;
+        gap: 10px;
+    }
+
     .navbar {
         padding: 1rem;
     }
