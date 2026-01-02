@@ -157,11 +157,41 @@ body::before {
     text-decoration: none;
 }
 
-.nav-logo-img {
-    height: 50px;
-    /* Adjust height as needed */
-    width: auto;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+/* Logo Styles */
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    /* Made smaller */
+    font-weight: 800;
+    /* Slightly less heavy */
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    /* Reduced spacing */
+    background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Closer gap */
+    transition: 0.3s;
+}
+
+.logo-text i {
+    font-size: 1.4rem;
+    /* Balanced icon size */
+    color: var(--primary-color);
+    -webkit-text-fill-color: var(--primary-color);
+    filter: drop-shadow(0 0 8px var(--primary-color));
+    transform: rotate(0deg);
+    /* Straight jet looks cleaner usually, or 90deg */
+}
+
+.logo-text:hover {
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+    transform: scale(1.02);
 }
 
 .logo span {
@@ -174,6 +204,8 @@ body::before {
     display: flex;
     list-style: none;
     gap: 2rem;
+    align-items: center;
+    /* Vertically center items */
 }
 
 .nav-links a {
@@ -186,7 +218,63 @@ body::before {
     position: relative;
 }
 
-.nav-links a::after {
+/* Register Button with Moving Mask */
+.nav-btn {
+    padding: 8px 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    /* This MUST clip children */
+    color: #fff;
+    background: transparent;
+    transition: color 0.3s;
+    z-index: 1;
+    /* Establish stacking context */
+    display: inline-block;
+    /* Ensure it respects box model */
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    /* Wider mask for smoother pass */
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    z-index: -1;
+    /* Place BEHIND text but above background */
+    transform: skewX(-20deg);
+    /* Angled shine looks more pro */
+    animation: maskMove 3s linear infinite;
+}
+
+@keyframes maskMove {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+        /* Returns to start, creating right-to-left effect */
+    }
+}
+
+.nav-btn:hover {
+    color: #fff;
+    /* Keep white on hover or change if needed */
+    box-shadow: 0 0 10px var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links a:not(.nav-btn)::after {
+    /* Exclude underline from button */
     content: '';
     position: absolute;
     bottom: -5px;
@@ -597,14 +685,6 @@ model-viewer {
     width: 100%;
     /* Full width */
     opacity: 0;
-    /* For animation */
-    transform: translateY(20px);
-    transition: all 0.6s ease-out;
-}
-
-.timeline-item.visible {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 .timeline-item::after {
@@ -927,11 +1007,113 @@ model-viewer {
     margin-top: 0.2rem;
 }
 
+/* Query / Student Coordinator Section */
+.section-subtitle {
+    font-family: var(--font-heading);
+    color: #fff;
+    text-align: center;
+    margin: 3rem 0 2rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 2rem;
+}
+
+.query-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.query-card {
+    padding: 1.5rem;
+    /* Compact padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: auto;
+}
+
+.query-card h4 {
+    color: var(--primary-color);
+    font-family: var(--font-heading);
+    margin-bottom: 0.2rem;
+    font-size: 1.2rem;
+}
+
+.query-card .role {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-row {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
+
+.contact-row a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.contact-row a:hover {
+    color: var(--primary-color);
+}
+
+.contact-row i {
+    color: var(--primary-color);
+}
+
+.icon-only {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.icon-only:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
 /* Contact Section */
 .contact-wrapper {
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
+    background-image: url('elements/3.png');
+    /* Added background image */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-wrapper::before {
+    /* Dark overlay for text readability */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.contact-info {
+    position: relative;
+    z-index: 2;
+    /* Ensure text is above overlay */
 }
 
 .info-item {
@@ -962,13 +1144,66 @@ model-viewer {
     margin: 0 auto;
 }
 
+.footer-main-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    background: linear-gradient(to right, #fff, #888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
 .footer-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
     margin-bottom: 3rem;
-    align-items: start;
-    /* Align to top */
+    align-items: stretch;
+    /* Ensure all columns extend to same height */
+    text-align: center;
+}
+
+.footer-col {
+    background: url('elements/6.png');
+    /* image background */
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform 0.3s, border-color 0.3s;
+    height: 100%;
+    position: relative;
+    /* Context for overlay */
+    overflow: hidden;
+    /* Clip overlay */
+    z-index: 1;
+}
+
+.footer-col::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    /* Dark overlay */
+    z-index: -1;
+    /* Behind content */
+}
+
+.footer-col:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    /* background: Keep image */
 }
 
 .footer-col h4 {
@@ -988,6 +1223,8 @@ model-viewer {
 .social-icons-row {
     display: flex;
     gap: 15px;
+    justify-content: center;
+    /* Center icons */
 }
 
 .social-icon-link {
@@ -1091,9 +1328,15 @@ model-viewer {
         letter-spacing: 3px;
     }
 
-    .nav-logo-img {
-        height: 35px;
-        /* Adjust for mobile */
+    .logo-text {
+        font-size: 1.1rem;
+        /* Even smaller for mobile safety */
+        gap: 4px;
+        letter-spacing: 0;
+    }
+
+    .logo-text i {
+        font-size: 1.1rem;
     }
 
     .logo {
@@ -1303,8 +1546,16 @@ model-viewer {
         min-height: auto;
     }
 
+    .footer-col {
+        height: auto;
+        min-height: auto;
+    }
+
     /* Ensure team cards also behave nicely if not already */
-    .team-grid {
+    /* Ensure team cards also behave nicely if not already */
+    .team-grid,
+    .query-grid,
+    .footer-row {
         grid-template-columns: 1fr;
     }
 }

@@ -151,10 +151,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sections.forEach(sec => sectionObserver.observe(sec));
 
-    // Timeline Items Observer
+    // Timeline Items Observer (GSAP Scroll Animation)
     const timelineItems = document.querySelectorAll('.timeline-item');
+
+    const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Animate with GSAP: Slide in from left with bounce
+                gsap.fromTo(entry.target,
+                    { opacity: 0, x: -100, scale: 0.9 }, // Start state
+                    {
+                        opacity: 1,
+                        x: 0,
+                        scale: 1,
+                        duration: 1.0,
+                        ease: "back.out(1.2)", // "Coming" bounce effect
+                        overwrite: "auto"
+                    }
+                );
+                timelineObserver.unobserve(entry.target); // Play once
+            }
+        });
+    }, { threshold: 0.2 });
+
     timelineItems.forEach(item => {
-        observer.observe(item);
+        timelineObserver.observe(item);
     });
 
     // Back to Top Button Logic
