@@ -326,12 +326,28 @@ section {
 .detail-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.2rem;
+    justify-content: center;
+    /* Ensure internal text is centered */
+    gap: 15px;
+    /* Increased gap */
+    font-size: 1.3rem;
+    /* Slightly larger text */
+    font-weight: 500;
+    /* Bolder text */
     border: 1px solid var(--primary-color);
-    padding: 10px 20px;
+    padding: 12px 25px;
+    /* More padding */
     border-radius: 50px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.1);
+    /* Slightly lighter background */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    /* Highlight glow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
 }
 
 .cta-buttons {
@@ -933,12 +949,129 @@ model-viewer {
 }
 
 /* Footer */
-footer {
-    padding: 2rem;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.8);
+#footer {
+    background: rgba(0, 0, 0, 0.9);
     border-top: 1px solid var(--glass-border);
+    padding: 4rem 10% 2rem;
+    position: relative;
+    z-index: 10;
 }
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+    align-items: start;
+    /* Align to top */
+}
+
+.footer-col h4 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.social-text {
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+.social-icons-row {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    /* Circle icons */
+    color: #fff;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.social-icon-link:hover {
+    background: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--primary-color);
+    transform: translateY(-3px);
+    border-color: var(--primary-color);
+}
+
+.map-container {
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    transition: box-shadow 0.3s;
+}
+
+.map-container:hover {
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    border-color: var(--primary-color);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--glass-border);
+    padding-top: 2rem;
+    text-align: center;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.developer-credit {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #aaa;
+}
+
+.dev-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.dev-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary-color);
+    transition: width 0.3s;
+}
+
+.dev-link:hover {
+    text-shadow: 0 0 10px var(--primary-color);
+}
+
+.dev-link:hover::after {
+    width: 100%;
+}
+
 
 /* Tablet & Mobile Responsiveness */
 @media screen and (max-width: 768px) {
@@ -1060,6 +1193,29 @@ footer {
         left: 0;
     }
 
+    .timeline-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .timeline-time {
+        width: 100%;
+        text-align: left;
+        margin: 1rem 0 0 0;
+        padding: 1rem 0 0 0;
+        border-left: none;
+        border-top: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .timeline-time span br {
+        display: none;
+        /* Make it one line or separated by space if needed, or keep break but left aligned */
+    }
+
     /* Home Layout Fixes */
     #home {
         padding: 6rem 1rem 2rem;
@@ -1134,7 +1290,21 @@ footer {
         width: 100%;
         height: 400px;
         order: -1;
-        /* Show model above text on mobile? Or below? Let's keep it below or remove order to default below. */
         margin-top: 2rem;
+    }
+
+    /* Prize/Mission Cards Stacking */
+    .prizes-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .prize-card {
+        min-height: auto;
+    }
+
+    /* Ensure team cards also behave nicely if not already */
+    .team-grid {
+        grid-template-columns: 1fr;
     }
 }
