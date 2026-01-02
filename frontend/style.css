@@ -74,6 +74,8 @@ body::before {
 .jet-container {
     position: relative;
     width: 300px;
+    max-width: 80%;
+    /* Ensure it fits on smaller screens */
     height: auto;
     display: flex;
     justify-content: center;
