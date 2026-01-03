@@ -1591,9 +1591,9 @@ model-viewer {
 
 .reg-card {
     flex: 1;
-    min-width: 320px;
-    max-width: 550px;
-    /* Made wider */
+    min-width: 350px;
+    max-width: 700px;
+    /* Made even wider */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1630,6 +1630,11 @@ model-viewer {
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    min-height: 2.4rem;
+    /* Force alignment */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .reg-card h4 {
@@ -1638,6 +1643,11 @@ model-viewer {
     margin-bottom: 2rem;
     font-weight: 500;
     letter-spacing: 0.5px;
+    min-height: 1.5rem;
+    /* Force alignment for longer text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .price-tag-sm {
@@ -1651,7 +1661,7 @@ model-viewer {
     margin-bottom: 2rem;
     letter-spacing: 1px;
     font-size: 1.2rem;
-    min-width: 150px;
+    min-width: 180px;
     /* Ensure uniform tag width */
 }
 
@@ -1660,6 +1670,8 @@ model-viewer {
     text-align: left;
     margin-bottom: 2.5rem;
     width: 90%;
+    flex-grow: 1;
+    /* Allow list to take up space to push button down evenly */
 }
 
 .reg-features li {
