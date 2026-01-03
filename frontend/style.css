@@ -1605,8 +1605,8 @@ model-viewer {
     /* More spacious padding */
     border-radius: 12px;
     position: relative;
-    /* Ensure content stretches to fill height */
-    justify-content: space-between;
+    justify-content: flex-start;
+    /* Align top first */
 }
 
 .reg-card:hover {
@@ -1618,8 +1618,14 @@ model-viewer {
 
 .card-icon {
     font-size: 3rem;
+    height: 60px;
+    /* Fixed height container */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--primary-color);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    /* Consistent spacing */
     filter: drop-shadow(0 0 10px var(--primary-color));
 }
 
