@@ -1601,24 +1601,15 @@ model-viewer {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.3s, border 0.3s, box-shadow 0.3s, background 0.3s;
-    padding: 3rem 2.5rem;
-    /* More spacious padding */
+    padding: 2rem 2.5rem;
+    /* Reduced margin */
     border-radius: 12px;
     position: relative;
     justify-content: flex-start;
     /* Align top first */
 }
 
-/* Specific adjustment for PG card content */
-#pg-card {
-    padding-top: 2rem;
-    /* Reduce top padding to pull content up */
-}
-
-#pg-card .card-icon {
-    margin-bottom: 1.5rem;
-    /* Reduce spacing below icon */
-}
+/* #pg-card block removed to apply styles globally */
 
 .reg-card:hover {
     border-color: var(--primary-color);
@@ -1635,8 +1626,8 @@ model-viewer {
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
-    margin-bottom: 2rem;
-    /* Consistent spacing */
+    margin-bottom: 1.5rem;
+    /* Reduced margin */
     filter: drop-shadow(0 0 10px var(--primary-color));
 }
 
