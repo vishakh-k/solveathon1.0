@@ -1581,17 +1581,19 @@ model-viewer {
 .registration-grid {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 2rem;
     flex-wrap: wrap;
     width: 100%;
-    max-width: 900px;
-    margin-bottom: 2.5rem;
+    max-width: 1200px;
+    margin-bottom: 5rem;
+    /* Increased margin */
 }
 
 .reg-card {
     flex: 1;
-    min-width: 280px;
-    max-width: 380px;
+    min-width: 320px;
+    max-width: 550px;
+    /* Made wider */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1599,7 +1601,8 @@ model-viewer {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.3s, border 0.3s, box-shadow 0.3s, background 0.3s;
-    padding: 2.5rem 2rem;
+    padding: 3rem 2.5rem;
+    /* More spacious padding */
     border-radius: 12px;
     position: relative;
     /* Ensure content stretches to fill height */
