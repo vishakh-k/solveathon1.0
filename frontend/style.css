@@ -1609,6 +1609,17 @@ model-viewer {
     /* Align top first */
 }
 
+/* Specific adjustment for PG card content */
+#pg-card {
+    padding-top: 2rem;
+    /* Reduce top padding to pull content up */
+}
+
+#pg-card .card-icon {
+    margin-bottom: 1.5rem;
+    /* Reduce spacing below icon */
+}
+
 .reg-card:hover {
     border-color: var(--primary-color);
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
