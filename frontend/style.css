@@ -1559,3 +1559,283 @@ model-viewer {
         grid-template-columns: 1fr;
     }
 }
+
+/* === Registration Page Styles === */
+#register-page {
+    padding-top: 8rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.centered-subtitle {
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 3rem;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+}
+
+.registration-grid {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 3rem;
+}
+
+.reg-card {
+    flex: 1;
+    min-width: 300px;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s, border 0.3s, box-shadow 0.3s;
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.reg-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 10px var(--primary-color));
+}
+
+.reg-card h3 {
+    font-size: 2rem;
+    color: #fff;
+    font-family: var(--font-heading);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.reg-card h4 {
+    font-size: 1.1rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.price-tag-sm {
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+.reg-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 2rem;
+    width: 80%;
+}
+
+.reg-features li {
+    margin-bottom: 10px;
+    color: #ddd;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reg-features li i {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.full-width-btn {
+    width: 100%;
+    max-width: 300px;
+    margin-top: auto;
+}
+
+/* === Form Styles === */
+.form-panel {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    overflow: hidden;
+    padding: 3rem;
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid var(--primary-color);
+    position: relative;
+    border-radius: 12px;
+}
+
+.hidden {
+    display: none;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1rem;
+}
+
+.form-header h3 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+}
+
+.close-form {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-form:hover {
+    color: var(--primary-color);
+    transform: rotate(90deg);
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h4 {
+    color: #fff;
+    border-left: 3px solid var(--primary-color);
+    padding-left: 10px;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-heading);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    color: #aaa;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 12px 15px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.form-panel.hidden {
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    border: none;
+}
+
+/* Mobile Responsiveness for Register Page */
+@media screen and (max-width: 768px) {
+    .registration-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reg-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .form-panel {
+        padding: 1.5rem;
+    }
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+}
+
+.loading-jet-img-sm {
+    width: 60px;
+    filter: drop-shadow(0 0 5px rgba(0, 150, 255, 0.6));
+    animation: shake 0.2s infinite;
+}
+
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active-page {
+    color: var(--primary-color) !important;
+    text-shadow: 0 0 10px var(--primary-color);
+}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enlist Info - Solve-A-Thon 1.0</title>
+    <meta name="description"
+        content="Register for Solve-A-Thon 1.0. Choose your category: UG (BCA/BSc) or PG/Engineering (MCA/MSc/BE).">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="elements/favicon.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Simple Loader for internal page (Optional, can be removed if too heavy) -->
+    <div id="loader" class="page-loader">
+        <div class="jet-container">
+            <img src="elements/loading_jet.png" alt="Loading" class="loading-jet-img-sm">
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" class="logo-text">
+                SOLVEATHON 1.0 <i class="fa-solid fa-jet-fighter-up"></i>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#events">Events</a></li>
+            <li><a href="index.html#rules">Details</a></li>
+            <li><a href="register.html" class="nav-btn active-page">Join Mission</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Registration Section -->
+    <section id="register-page">
+        <div class="container">
+            <h2 class="section-title">Mission Enlistment</h2>
+            <p class="subtitle centered-subtitle">Select your Squadron Category</p>
+
+            <!-- Category Selection Cards -->
+            <div class="registration-grid">
+
+                <!-- UG Card -->
+                <div class="reg-card glass-panel" id="ug-card">
+                    <div class="card-icon">
+                        <i class="fa-brands fa-space-awesome"></i>
+                    </div>
+                    <h3>Cadet League</h3>
+                    <h4>BCA / BSc Students</h4>
+                    <div class="price-tag-sm">
+                        <span>ENTRY: FREE</span>
+                    </div>
+                    <ul class="reg-features">
+                        <li><i class="fa-solid fa-check"></i> Standard Hardware Access</li>
+                        <li><i class="fa-solid fa-check"></i> 24H Hackathon Access</li>
+                        <li><i class="fa-solid fa-check"></i> Certifications & Swags</li>
+                    </ul>
+                    <button class="btn primary-btn full-width-btn" onclick="showForm()">
+                        Initiate Registration
+                    </button>
+                </div>
+
+                <!-- PG/Eng Card -->
+                <div class="reg-card glass-panel" id="pg-card">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <h3>Commander League</h3>
+                    <h4>MCA / MSc / BE Students</h4>
+                    <div class="price-tag-sm">
+                        <span>ENTRY: ₹500</span>
+                    </div>
+                    <ul class="reg-features">
+                        <li><i class="fa-solid fa-check"></i> Premium Resource Allocation</li>
+                        <li><i class="fa-solid fa-check"></i> Industry Mentorship</li>
+                        <li><i class="fa-solid fa-check"></i> Cash Pool Rewards</li>
+                    </ul>
+                    <a href="https://konfhub.com/solveathon1" target="_blank" class="btn primary-btn full-width-btn">
+                        Proceed to KonfHub
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- UG Registration Form (Hidden by default) -->
+            <div id="ug-form-container" class="glass-panel form-panel hidden">
+                <div class="form-header">
+                    <h3>Cadet Enlistment Form</h3>
+                    <button class="close-form" onclick="hideForm()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <form id="missionForm" action="#">
+
+                    <!-- Team Intel -->
+                    <div class="form-section">
+                        <h4><i class="fa-solid fa-users-viewfinder"></i> Team Intel</h4>
+                        <div class="input-group">
+                            <label>Team Name</label>
+                            <input type="text" placeholder="Enter Squadron Name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>College Name</label>
+                            <input type="text" placeholder="Base of Operations" required>
+                        </div>
+                    </div>
+
+                    <!-- Leader Intel -->
+                    <div class="form-section">
+                        <h4><i class="fa-solid fa-user-astronaut"></i> Team Leader (Member 1)</h4>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" placeholder="Leader Name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>USN / Reg No</label>
+                                <input type="text" placeholder="ID Number" required>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Email Comms</label>
+                                <input type="email" placeholder="email@address.com" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Contact Frequency</label>
+                                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Members -->
+                    <div class="form-section">
+                        <h4><i class="fa-solid fa-users"></i> Squadron Members</h4>
+                        <div class="grid-3">
+                            <div class="input-group">
+                                <label>Member 2 Name</label>
+                                <input type="text" placeholder="Name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Member 3 Name</label>
+                                <input type="text" placeholder="Name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Member 4 Name</label>
+                                <input type="text" placeholder="Name" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary-btn glow-effect">Transmit Data</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Background Elements -->
+        <div class="hero-background">
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <!-- Reusing Footer from index for consistency -->
+        <div class="footer-container">
+            <p style="text-align: center; color: #888;">&copy; 2026 Solve-A-Thon 1.0 | Mission Control</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inline script for page specific logic
+
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
+            }
+
+            // Animate Cards Entry
+            gsap.from(".reg-card", {
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out",
+                delay: 0.2
+            });
+        });
+
+        // Form Toggle Logic
+        function showForm() {
+            const formContainer = document.getElementById('ug-form-container');
+            const grid = document.querySelector('.registration-grid');
+
+            formContainer.classList.remove('hidden');
+
+            // Scroll to form
+            // Animation
+            gsap.fromTo(formContainer,
+                { height: 0, opacity: 0 },
+                { height: "auto", opacity: 1, duration: 0.6, ease: "power2.out" }
+            );
+
+            // Hide the grid momentarily or jump to form? 
+            // Better UX: Scroll to form
+            setTimeout(() => {
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function hideForm() {
+            const formContainer = document.getElementById('ug-form-container');
+
+            gsap.to(formContainer, {
+                height: 0,
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.in",
+                onComplete: () => formContainer.classList.add('hidden')
+            });
+
+            // Scroll back top
+            document.querySelector('.section-title').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Hamburger reuse
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+
+</html>
