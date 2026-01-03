@@ -1581,17 +1581,17 @@ model-viewer {
 .registration-grid {
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    gap: 1.5rem;
     flex-wrap: wrap;
     width: 100%;
-    max-width: 1000px;
-    margin-bottom: 3rem;
+    max-width: 900px;
+    margin-bottom: 2.5rem;
 }
 
 .reg-card {
     flex: 1;
-    min-width: 300px;
-    max-width: 450px;
+    min-width: 250px;
+    max-width: 350px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1599,8 +1599,8 @@ model-viewer {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.3s, border 0.3s, box-shadow 0.3s;
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 1.5rem;
+    border-radius: 12px;
 }
 
 .reg-card:hover {
@@ -1610,17 +1610,17 @@ model-viewer {
 }
 
 .card-icon {
-    font-size: 4rem;
+    font-size: 3rem;
     color: var(--primary-color);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     filter: drop-shadow(0 0 10px var(--primary-color));
 }
 
 .reg-card h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #fff;
     font-family: var(--font-heading);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
     text-transform: uppercase;
 }
 
