@@ -1590,83 +1590,99 @@ model-viewer {
 
 .reg-card {
     flex: 1;
-    min-width: 250px;
-    max-width: 350px;
+    min-width: 280px;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.3s, border 0.3s, box-shadow 0.3s;
-    padding: 1.5rem;
+    transition: transform 0.3s, border 0.3s, box-shadow 0.3s, background 0.3s;
+    padding: 2.5rem 2rem;
     border-radius: 12px;
+    position: relative;
+    /* Ensure content stretches to fill height */
+    justify-content: space-between;
 }
 
 .reg-card:hover {
     border-color: var(--primary-color);
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
     transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .card-icon {
     font-size: 3rem;
     color: var(--primary-color);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     filter: drop-shadow(0 0 10px var(--primary-color));
 }
 
 .reg-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #fff;
     font-family: var(--font-heading);
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .reg-card h4 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #aaa;
-    margin-bottom: 1.5rem;
-    font-weight: 400;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .price-tag-sm {
     background: rgba(0, 243, 255, 0.1);
     border: 1px solid var(--primary-color);
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     font-family: var(--font-heading);
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 2rem;
     letter-spacing: 1px;
+    font-size: 1.2rem;
+    min-width: 150px;
+    /* Ensure uniform tag width */
 }
 
 .reg-features {
     list-style: none;
     text-align: left;
-    margin-bottom: 2rem;
-    width: 80%;
+    margin-bottom: 2.5rem;
+    width: 90%;
 }
 
 .reg-features li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #ddd;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    font-size: 0.95rem;
 }
 
 .reg-features li i {
     color: var(--primary-color);
-    font-size: 0.9rem;
+    font-size: 1rem;
+    min-width: 20px;
+    /* Align text properly */
+    text-align: center;
 }
 
 .full-width-btn {
     width: 100%;
     max-width: 300px;
     margin-top: auto;
+    /* Override global opacity/transform since no GSAP on this page for these buttons */
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 /* === Form Styles === */
