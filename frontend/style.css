@@ -1630,17 +1630,21 @@ model-viewer {
 }
 
 .reg-card h3 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    /* Reduced to fit one line */
     color: #fff;
     font-family: var(--font-heading);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    /* Reduced spacing */
     min-height: 2.4rem;
     /* Force alignment */
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
+    /* Force one line */
 }
 
 .reg-card h4 {
