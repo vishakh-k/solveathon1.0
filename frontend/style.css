@@ -851,6 +851,16 @@ model-viewer {
     z-index: 0;
 }
 
+.rewards-card h3 {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #fff;
+    text-shadow: 0 0 25px var(--primary-color);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+}
+
 .prize-card .card-content {
     position: relative;
     z-index: 1;
