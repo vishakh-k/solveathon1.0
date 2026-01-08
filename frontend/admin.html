@@ -536,13 +536,18 @@
 
         // --- Approval Logic ---
         function approveTeam(docId, teamName, email) {
-            if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database status to 'Approved'.`)) {
+            if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database and prepare an approval email.`)) {
 
                 db.collection('registrations').doc(docId).update({
                     status: 'Approved',
                     'payment.verified': true
                 }).then(() => {
-                    alert(`Access Granted to ${teamName}! \n\nNote: To send an email notification, you must set up Firebase Cloud Functions or use a third-party email service.`);
+                    // Open Mailto Link
+                    const subject = encodeURIComponent("Mission Clearance Granted: Solve-A-Thon 1.0");
+                    const body = encodeURIComponent(`Greetings Team ${teamName},\n\nYour payment has been verified and your mission status is now APPROVED.\n\nGet ready for the launch sequence.\n\nRegards,\nMission Control\nAdmin Team`);
+                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+
+                    alert(`Access Granted to ${teamName}!`);
                 }).catch((error) => {
                     console.error("Error updating document: ", error);
                     alert("Error updating status: " + error.message);
