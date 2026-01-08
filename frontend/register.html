@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- GSAP Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="firebase-init.js"></script>
 </head>
 
 <body>
@@ -364,7 +373,6 @@
             }
 
             // Animation
-            // Animation
             gsap.fromTo(formContainer,
                 { height: 0, opacity: 0 },
                 {
@@ -394,13 +402,84 @@
                 ease: "power2.in",
                 onComplete: () => {
                     formContainer.classList.add('hidden');
-                    // Reset form optional?
+                    document.getElementById('missionForm').reset();
                 }
             });
 
             // Scroll back top
             document.querySelector('.section-title').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // --- FIREBASE SUBMISSION LOGIC ---
+        const missionForm = document.getElementById('missionForm');
+        missionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = missionForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                // Collect Form Data
+                const formData = new FormData(missionForm);
+                const category = formData.get('category');
+                const stamp = new Date();
+
+                const teamData = {
+                    category: category,
+                    college_name: formData.get('college_name'),
+                    team_name: formData.get('team_name'),
+                    leader: {
+                        name: formData.get('leader_name'),
+                        contact: formData.get('leader_contact'),
+                        email: formData.get('leader_email')
+                    },
+                    members: [
+                        { name: formData.get('member2_name'), contact: formData.get('member2_contact'), email: formData.get('member2_email') },
+                        { name: formData.get('member3_name'), contact: formData.get('member3_contact'), email: formData.get('member3_email') },
+                        { name: formData.get('member4_name'), contact: formData.get('member4_contact'), email: formData.get('member4_email') }
+                    ],
+                    registeredAt: stamp,
+                    status: category === 'UG' ? 'Approved' : 'Pending', // UG is auto-approved (Free)
+                    payment: null
+                };
+
+                // Handle PG Payment Upload
+                if (category === 'PG') {
+                    const transId = formData.get('transaction_id');
+                    const file = formData.get('payment_screenshot');
+
+                    if (file && file.size > 0) {
+                        const storageRef = storage.ref(`payment_proofs/${teamData.team_name}_${stamp.getTime()}`);
+                        const snapshot = await storageRef.put(file);
+                        const downloadURL = await snapshot.ref.getDownloadURL();
+
+                        teamData.payment = {
+                            transactionId: transId,
+                            screenShotUrl: downloadURL,
+                            verified: false
+                        };
+                    }
+                }
+
+                // Save to Firestore
+                await db.collection('registrations').add(teamData);
+
+                // Success Feedback
+                alert(`Mission Enlistment Successful!\n\nSquadron: ${teamData.team_name}\nStatus: ${teamData.status}\n\n${category === 'PG' ? 'Commander League: Pending Payment Verification. You will be notified upon approval.' : 'Cadet League: You are good to go!'}`);
+
+                hideForm();
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Mission Failed: Error submitting data. Please try again.\n" + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            }
+        });
+
 
         // Hamburger reuse
         const hamburger = document.querySelector('.hamburger');

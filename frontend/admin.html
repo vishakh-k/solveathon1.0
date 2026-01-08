@@ -13,6 +13,15 @@
     <link rel="icon" href="elements/favicon.jpg">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="firebase-init.js"></script>
+
     <style>
         /* Admin Specific Styles */
         body {
@@ -249,10 +258,15 @@
         <div class="login-box">
             <h2 style="font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 1rem;">CLASSIFIED
                 ACCESS</h2>
-            <p style="color: #ccc; margin-bottom: 1.5rem;">Enter Admin Clearance Code</p>
-            <input type="password" id="admin-pass"
+            <p style="color: #ccc; margin-bottom: 1.5rem;">Identify Yourself</p>
+
+            <input type="email" id="admin-email" placeholder="Commander ID (Email)"
                 style="padding: 10px; width: 100%; margin-bottom: 1rem; background: #000; border: 1px solid var(--primary-color); color: #fff; text-align: center;">
-            <button class="btn primary-btn" onclick="checkAuth()">Access Dashboard</button>
+
+            <input type="password" id="admin-pass" placeholder="Passcode"
+                style="padding: 10px; width: 100%; margin-bottom: 1rem; background: #000; border: 1px solid var(--primary-color); color: #fff; text-align: center;">
+
+            <button class="btn primary-btn" onclick="login()">Access Dashboard</button>
             <p id="error-msg" style="color: red; margin-top: 10px; display: none;">Access Denied</p>
         </div>
     </div>
@@ -370,37 +384,90 @@
     </div>
 
     <script>
-        // --- Dummy Data ---
-        const ugTeams = [
-            { team: "Code Warriors", college: "Canara College", leader: "Arjun K", contact: "9876543210", email: "arjun@gmail.com", date: "2026-01-15" },
-            { team: "Byte Busters", college: "St. Aloysius", leader: "Sneha R", contact: "9876543211", email: "sneha@gmail.com", date: "2026-01-16" },
-            { team: "Cyber Knights", college: "SDM", leader: "Rahul M", contact: "9876543212", email: "rahul@gmail.com", date: "2026-01-16" },
-        ];
-
-        const pgTeams = [
-            { id: 1, team: "Tech Titans", leader: "Varun S", contact: "9988776655", email: "varun@gmail.com", transId: "UPI1234567890", status: "Pending", proof: "elements/earth.jpg" },
-            { id: 2, team: "Innovators", leader: "Priya D", contact: "9988776654", email: "priya@gmail.com", transId: "UPI0987654321", status: "Approved", proof: "elements/earth.jpg" },
-            { id: 3, team: "System Overload", leader: "Karthik", contact: "9988776653", email: "karthik@gmail.com", transId: "UPI1122334455", status: "Pending", proof: "elements/earth.jpg" },
-            { id: 4, team: "Null Pointers", leader: "Ananya", contact: "9988776652", email: "ananya@gmail.com", transId: "UPI5566778899", status: "Pending", proof: "elements/earth.jpg" }
-        ];
+        let ugTeams = [];
+        let pgTeams = [];
+        let unsubscribe = null;
 
         // --- Auth Logic ---
-        function checkAuth() {
-            const pass = document.getElementById('admin-pass').value;
-            // Hardcoded "secret" for static demo. In real app, verify securely.
-            if (pass === "SOLVE2026") {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
                 document.getElementById('login-overlay').style.display = 'none';
                 const dashboard = document.getElementById('dashboard');
                 dashboard.style.filter = 'none';
                 dashboard.style.pointerEvents = 'all';
-                renderTables();
+
+                // Start listening to data
+                fetchData();
             } else {
-                document.getElementById('error-msg').style.display = 'block';
+                // User is signed out
+                document.getElementById('login-overlay').style.display = 'flex';
+                document.getElementById('dashboard').style.filter = 'blur(5px)';
+                document.getElementById('dashboard').style.pointerEvents = 'none';
+
+                if (unsubscribe) unsubscribe();
             }
+        });
+
+        function login() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .catch((error) => {
+                    console.error("Login Failed", error);
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = error.message;
+                });
         }
 
         function logout() {
-            location.reload();
+            auth.signOut();
+        }
+
+        // --- Data Logic ---
+        function fetchData() {
+            // Listen to real-time updates
+            unsubscribe = db.collection('registrations')
+                .orderBy('registeredAt', 'desc')
+                .onSnapshot((snapshot) => {
+                    ugTeams = [];
+                    pgTeams = [];
+
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        data.id = doc.id; // Store Doc ID for updates
+
+                        // Format Date
+                        if (data.registeredAt && data.registeredAt.toDate) {
+                            data.dateStr = data.registeredAt.toDate().toLocaleDateString();
+                        } else {
+                            data.dateStr = 'N/A';
+                        }
+
+                        if (data.category === 'UG') {
+                            ugTeams.push(data);
+                        } else if (data.category === 'PG') {
+                            pgTeams.push(data);
+                        }
+                    });
+
+                    // Update UI
+                    updateStats();
+                    renderTables();
+                }, (error) => {
+                    console.error("Error fetching data:", error);
+                    alert("Error fetching live data: " + error.message);
+                });
+        }
+
+        function updateStats() {
+            // UG Stats
+            // Assuming this is how it would be structured if we separated them.
+            // For now, I'll just update logic if I had unique IDs for elements, 
+            // but the HTML currently hardcodes them inside cards.
+            // Be efficient: Update tables mostly.
         }
 
         // --- Tab Logic ---
@@ -431,12 +498,12 @@
             const ugBody = document.getElementById('ug-table-body');
             ugBody.innerHTML = ugTeams.map(t => `
                 <tr>
-                    <td style="font-weight: bold; color: #fff;">${t.team}</td>
-                    <td>${t.college}</td>
-                    <td>${t.leader}</td>
-                    <td>${t.contact}</td>
-                    <td>${t.email}</td>
-                    <td>${t.date}</td>
+                    <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
+                    <td>${t.college_name}</td>
+                    <td>${t.leader.name}</td>
+                    <td>${t.leader.contact}</td>
+                    <td>${t.leader.email}</td>
+                    <td>${t.dateStr}</td>
                 </tr>
             `).join('');
 
@@ -448,15 +515,19 @@
             const pgBody = document.getElementById('pg-table-body');
             pgBody.innerHTML = pgTeams.map(t => `
                 <tr>
-                    <td style="font-weight: bold; color: #fff;">${t.team}</td>
-                    <td>${t.leader}</td>
-                    <td>${t.contact}</td>
-                    <td style="font-family: monospace; color: #aaa;">${t.transId}</td>
-                    <td><button class="action-btn btn-view" onclick="viewProof('${t.proof}')"><i class="fa-regular fa-image"></i> View</button></td>
+                    <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
+                    <td>${t.leader.name}</td>
+                    <td>${t.leader.contact}</td>
+                    <td style="font-family: monospace; color: #aaa;">${t.payment ? t.payment.transactionId : 'N/A'}</td>
+                    <td>
+                        ${t.payment && t.payment.screenShotUrl ?
+                    `<button class="action-btn btn-view" onclick="viewProof('${t.payment.screenShotUrl}')"><i class="fa-regular fa-image"></i> View</button>` :
+                    '<span style="color:#555;">No Proof</span>'}
+                    </td>
                     <td><span class="status-badge ${t.status === 'Approved' ? 'status-approved' : 'status-pending'}">${t.status}</span></td>
                     <td>
                         ${t.status === 'Pending' ?
-                    `<button class="action-btn btn-approve" onclick="approveTeam(${t.id})"><i class="fa-solid fa-check"></i> Approve</button>` :
+                    `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
                     '<span style="color:#aaa;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
                     </td>
                 </tr>
@@ -464,14 +535,18 @@
         }
 
         // --- Approval Logic ---
-        function approveTeam(id) {
-            const team = pgTeams.find(t => t.id === id);
-            if (team) {
-                if (confirm(`Confirm payment receipt for team "${team.team}"? \n\nThis will send an approval notification to ${team.email}.`)) {
-                    team.status = "Approved";
-                    renderPGTable();
-                    alert(`Access Granted! \nNotification sent to Team Leader: ${team.leader}`);
-                }
+        function approveTeam(docId, teamName, email) {
+            if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database status to 'Approved'.`)) {
+
+                db.collection('registrations').doc(docId).update({
+                    status: 'Approved',
+                    'payment.verified': true
+                }).then(() => {
+                    alert(`Access Granted to ${teamName}! \n\nNote: To send an email notification, you must set up Firebase Cloud Functions or use a third-party email service.`);
+                }).catch((error) => {
+                    console.error("Error updating document: ", error);
+                    alert("Error updating status: " + error.message);
+                });
             }
         }
 
@@ -484,7 +559,6 @@
         function closeModal() {
             document.getElementById('img-modal').style.display = 'none';
         }
-
     </script>
 </body>
 
