@@ -1,21 +1,18 @@
-// Import Firebase SDKs (using compat for simpler HTML integration)
-// Note: We will include the CDN scripts in the HTML files before this script runs.
-
+// Firebase Configuration
 const firebaseConfig = {
-    // --- PASTE YOUR FIREBASE CONFIG HERE ---
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-    // ---------------------------------------
+    apiKey: "AIzaSyDvQ0lV52T5dso21Q8HYF8mqN3u_YITs30",
+    authDomain: "solveathon1-0.firebaseapp.com",
+    projectId: "solveathon1-0",
+    storageBucket: "solveathon1-0.firebasestorage.app",
+    messagingSenderId: "466466041760",
+    appId: "1:466466041760:web:84db5ea2ad90886a9bfec5"
 };
 
-// Initialize Firebase
+// Initialize Firebase (Compat)
+// The firebase object is available because we included the CDN scripts in HTML
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 
-console.log("Firebase Initialized");
+console.log("Firebase Initialized Successfully");
