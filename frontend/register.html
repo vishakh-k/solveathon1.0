@@ -364,6 +364,7 @@
             }
 
             // Animation
+            // Animation
             gsap.fromTo(formContainer,
                 { height: 0, opacity: 0 },
                 {
@@ -372,7 +373,8 @@
                     duration: 0.6,
                     ease: "power2.out",
                     onComplete: () => {
-                        formContainer.style.overflow = "visible"; // Allow overflow after animation
+                        formContainer.style.overflow = "visible";
+                        gsap.set(formContainer, { clearProps: "height" }); // CRITICAL: Remove fixed height
                     }
                 }
             );
