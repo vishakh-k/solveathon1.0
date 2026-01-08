@@ -21,7 +21,7 @@
 
 <body>
 
-    <!-- Simple Loader for internal page (Optional, can be removed if too heavy) -->
+    <!-- Simple Loader -->
     <div id="loader" class="page-loader">
         <div class="jet-container">
             <img src="elements/loading_jet.png" alt="Loading" class="loading-jet-img-sm">
@@ -73,7 +73,7 @@
                         <li><i class="fa-solid fa-check"></i> 24H Hackathon Access</li>
                         <li><i class="fa-solid fa-check"></i> Certifications & Swags</li>
                     </ul>
-                    <button class="btn primary-btn full-width-btn" onclick="showForm()">
+                    <button class="btn primary-btn full-width-btn" onclick="showForm('UG')">
                         Join Mission
                     </button>
                 </div>
@@ -93,21 +93,22 @@
                         <li><i class="fa-solid fa-check"></i> Industry Mentorship</li>
                         <li><i class="fa-solid fa-check"></i> Cash Pool Rewards</li>
                     </ul>
-                    <a href="https://konfhub.com/solveathon1" target="_blank" class="btn primary-btn full-width-btn">
+                    <button class="btn primary-btn full-width-btn" onclick="showForm('PG')">
                         Join Mission
-                    </a>
+                    </button>
                 </div>
 
             </div>
 
-            <!-- UG Registration Form (Hidden by default) -->
-            <div id="ug-form-container" class="glass-panel form-panel hidden">
+            <!-- Unified Registration Form (Hidden by default) -->
+            <div id="enlist-form-container" class="glass-panel form-panel hidden">
                 <div class="form-header">
-                    <h3>Cadet Enlistment Form</h3>
+                    <h3 id="form-title">Enlistment Form</h3>
                     <button class="close-form" onclick="hideForm()"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
-                <form id="missionForm" action="#">
+                <form id="missionForm" action="#" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="category-input" name="category" value="">
 
                     <!-- Team Intel -->
                     <div class="form-section">
@@ -115,26 +116,30 @@
                         <div class="grid-2">
                             <div class="input-group">
                                 <label>College Name</label>
-                                <input type="text" placeholder="Enter College Name" required>
+                                <input type="text" name="college_name" placeholder="Enter College Name" required>
                             </div>
                             <div class="input-group">
                                 <label>Team Name</label>
-                                <input type="text" placeholder="Enter Team Name" required>
+                                <input type="text" name="team_name" placeholder="Enter Team Name" required>
                             </div>
                         </div>
                     </div>
 
                     <!-- Team Leader -->
                     <div class="form-section">
-                        <h4><i class="fa-solid fa-user-astronaut"></i> Team Leader (Member 1)</h4>
-                        <div class="grid-2">
+                        <h4><i class="fa-solid fa-user-astronaut"></i> Team Leader</h4>
+                        <div class="grid-3">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" placeholder="Leader Name" required>
+                                <input type="text" name="leader_name" placeholder="Leader Name" required>
                             </div>
                             <div class="input-group">
                                 <label>Contact Number</label>
-                                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+                                <input type="tel" name="leader_contact" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Email ID</label>
+                                <input type="email" name="leader_email" placeholder="email@example.com" required>
                             </div>
                         </div>
                     </div>
@@ -142,14 +147,18 @@
                     <!-- Member 2 -->
                     <div class="form-section">
                         <h4><i class="fa-solid fa-user"></i> Member 2</h4>
-                        <div class="grid-2">
+                        <div class="grid-3">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" placeholder="Member Name" required>
+                                <input type="text" name="member2_name" placeholder="Member Name" required>
                             </div>
                             <div class="input-group">
                                 <label>Contact Number</label>
-                                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+                                <input type="tel" name="member2_contact" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Email ID</label>
+                                <input type="email" name="member2_email" placeholder="email@example.com" required>
                             </div>
                         </div>
                     </div>
@@ -157,14 +166,18 @@
                     <!-- Member 3 -->
                     <div class="form-section">
                         <h4><i class="fa-solid fa-user"></i> Member 3</h4>
-                        <div class="grid-2">
+                        <div class="grid-3">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" placeholder="Member Name" required>
+                                <input type="text" name="member3_name" placeholder="Member Name" required>
                             </div>
                             <div class="input-group">
                                 <label>Contact Number</label>
-                                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+                                <input type="tel" name="member3_contact" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Email ID</label>
+                                <input type="email" name="member3_email" placeholder="email@example.com" required>
                             </div>
                         </div>
                     </div>
@@ -172,16 +185,62 @@
                     <!-- Member 4 -->
                     <div class="form-section">
                         <h4><i class="fa-solid fa-user"></i> Member 4</h4>
-                        <div class="grid-2">
+                        <div class="grid-3">
                             <div class="input-group">
                                 <label>Full Name</label>
-                                <input type="text" placeholder="Member Name" required>
+                                <input type="text" name="member4_name" placeholder="Member Name" required>
                             </div>
                             <div class="input-group">
                                 <label>Contact Number</label>
-                                <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+                                <input type="tel" name="member4_contact" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Email ID</label>
+                                <input type="email" name="member4_email" placeholder="email@example.com" required>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- LEAGUE SPECIFIC SECTION: PAYMENT (Hidden for UG) -->
+                    <div id="payment-section" class="form-section hidden">
+                        <h4><i class="fa-solid fa-money-bill-transfer"></i> Mission Clearance Fee</h4>
+                        <div class="payment-info">
+                            <p>To confirm your seat in the Commander League, please pay the registration fee of
+                                <strong>₹500</strong>.</p>
+
+                            <div class="scanner-container" style="text-align: center; margin: 20px 0;">
+                                <!-- Placeholder for Scanner -->
+                                <div class="qr-placeholder"
+                                    style="width: 200px; height: 200px; background: #fff; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                                    <span style="color: #000; font-weight: bold;">UPI SCANNER HERE</span>
+                                </div>
+                                <p style="margin-top: 10px; color: #ccc;">Scan to Pay</p>
+                            </div>
+
+                            <div class="grid-2">
+                                <div class="input-group">
+                                    <label>Transaction ID</label>
+                                    <input type="text" name="transaction_id" placeholder="Enter UPI Transaction ID">
+                                </div>
+                                <div class="input-group">
+                                    <label>Payment Screenshot</label>
+                                    <input type="file" name="payment_screenshot" accept="image/*">
+                                </div>
+                            </div>
+                            <p class="note" style="font-size: 0.8rem; color: #aaa; margin-top: 5px;">*Admin approval
+                                required for final confirmation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-section" style="margin-top: 2rem;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">I allow Solve-A-Thon to process my data and agree to the <a
+                                    href="index.html#rules" style="color: var(--primary-color);">Mission
+                                    Protocols</a>.</span>
+                        </label>
                     </div>
 
                     <div class="form-actions">
@@ -281,35 +340,51 @@
         });
 
         // Form Toggle Logic
-        function showForm() {
-            const formContainer = document.getElementById('ug-form-container');
-            const grid = document.querySelector('.registration-grid');
+        function showForm(type) {
+            const formContainer = document.getElementById('enlist-form-container');
+            const formTitle = document.getElementById('form-title');
+            const categoryInput = document.getElementById('category-input');
+            const paymentSection = document.getElementById('payment-section');
+            const paymentInputs = paymentSection.querySelectorAll('input');
 
             formContainer.classList.remove('hidden');
+            categoryInput.value = type;
 
-            // Scroll to form
+            if (type === 'PG') {
+                formTitle.innerHTML = '<i class="fa-solid fa-rocket"></i> Commander Enlistment (PG/Eng)';
+                paymentSection.classList.remove('hidden');
+                // Make payment fields required
+                paymentInputs.forEach(input => input.setAttribute('required', 'true'));
+            } else {
+                formTitle.innerHTML = '<i class="fa-brands fa-space-awesome"></i> Cadet Enlistment (BCA/BSc)';
+                paymentSection.classList.add('hidden');
+                // Remove required from hidden fields
+                paymentInputs.forEach(input => input.removeAttribute('required'));
+            }
+
             // Animation
             gsap.fromTo(formContainer,
                 { height: 0, opacity: 0 },
                 { height: "auto", opacity: 1, duration: 0.6, ease: "power2.out" }
             );
 
-            // Hide the grid momentarily or jump to form? 
-            // Better UX: Scroll to form
             setTimeout(() => {
                 formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         }
 
         function hideForm() {
-            const formContainer = document.getElementById('ug-form-container');
+            const formContainer = document.getElementById('enlist-form-container');
 
             gsap.to(formContainer, {
                 height: 0,
                 opacity: 0,
                 duration: 0.5,
                 ease: "power2.in",
-                onComplete: () => formContainer.classList.add('hidden')
+                onComplete: () => {
+                    formContainer.classList.add('hidden');
+                    // Reset form optional?
+                }
             });
 
             // Scroll back top
