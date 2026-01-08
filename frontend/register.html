@@ -206,7 +206,8 @@
                         <h4><i class="fa-solid fa-money-bill-transfer"></i> Mission Clearance Fee</h4>
                         <div class="payment-info">
                             <p>To confirm your seat in the Commander League, please pay the registration fee of
-                                <strong>₹500</strong>.</p>
+                                <strong>₹500</strong>.
+                            </p>
 
                             <div class="scanner-container" style="text-align: center; margin: 20px 0;">
                                 <!-- Placeholder for Scanner -->
@@ -244,7 +245,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn primary-btn glow-effect">Confirm & Join Mission</button>
+                        <button type="submit" class="btn primary-btn glow-effect">SUBMIT & JOIN MISSION</button>
                     </div>
 
                 </form>
@@ -365,7 +366,15 @@
             // Animation
             gsap.fromTo(formContainer,
                 { height: 0, opacity: 0 },
-                { height: "auto", opacity: 1, duration: 0.6, ease: "power2.out" }
+                {
+                    height: "auto",
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        formContainer.style.overflow = "visible"; // Allow overflow after animation
+                    }
+                }
             );
 
             setTimeout(() => {
