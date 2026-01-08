@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="elements/favicon.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin Specific Styles */
+        body {
+            padding-top: 0;
+            /* Reset for dashboard layout */
+            overflow-x: hidden;
+        }
+
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .login-box {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid var(--primary-color);
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(5, 5, 10, 0.95);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000 100%);
+            min-height: 100vh;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            color: #aaa;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-family: var(--font-heading);
+            letter-spacing: 1px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .stat-card h4 {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .count {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-family: var(--font-heading);
+            font-weight: bold;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ddd;
+            min-width: 1000px;
+            /* Force scroll */
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: var(--primary-color);
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 0, 0.2);
+            color: orange;
+            border: 1px solid orange;
+        }
+
+        .status-approved {
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 5px;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        .btn-approve {
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+
+        .btn-approve:hover {
+            background: #0f0;
+            color: #000;
+        }
+
+        .btn-view {
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        /* Modal for Screenshot */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 30px var(--primary-color);
+        }
+
+        .close-modal {
+            margin-top: 1rem;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Security Check -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="font-family: var(--font-heading); color: var(--primary-color); margin-bottom: 1rem;">CLASSIFIED
+                ACCESS</h2>
+            <p style="color: #ccc; margin-bottom: 1.5rem;">Enter Admin Clearance Code</p>
+            <input type="password" id="admin-pass"
+                style="padding: 10px; width: 100%; margin-bottom: 1rem; background: #000; border: 1px solid var(--primary-color); color: #fff; text-align: center;">
+            <button class="btn primary-btn" onclick="checkAuth()">Access Dashboard</button>
+            <p id="error-msg" style="color: red; margin-top: 10px; display: none;">Access Denied</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container" id="dashboard" style="filter: blur(5px); pointer-events: none;">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo" style="margin-bottom: 3rem;">
+                <span style="font-size: 1.5rem; font-weight: bold; color: #fff;">ADMIN <span
+                        style="color: var(--primary-color);">PANEL</span></span>
+            </div>
+
+            <div class="nav-item active" onclick="switchTab('ug')">
+                <i class="fa-brands fa-space-awesome"></i> Cadet League (UG)
+            </div>
+            <div class="nav-item" onclick="switchTab('pg')">
+                <i class="fa-solid fa-rocket"></i> Commander League (PG)
+            </div>
+            <div class="nav-item" style="margin-top: auto; color: #f55;" onclick="logout()">
+                <i class="fa-solid fa-power-off"></i> Terminate Session
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="admin-header">
+                <h2 id="page-title" style="font-family: var(--font-heading); color: #fff;">Cadet League Overview</h2>
+                <div class="user-profile">
+                    <span style="color: #aaa;">Commander: </span> <span
+                        style="color: var(--primary-color);">Admin</span>
+                </div>
+            </div>
+
+            <!-- UG SECTION -->
+            <div id="ug-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total Teams</h4>
+                        <div class="count">12</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Participants</h4>
+                        <div class="count">48</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3>Registered Squadrons - BCA / BSc</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>College</th>
+                                <th>Leader</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Reg Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ug-table-body">
+                            <!-- Mock Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PG SECTION -->
+            <div id="pg-section" class="hidden-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Pending Approvals</h4>
+                        <div class="count" style="color: orange;">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Approved Teams</h4>
+                        <div class="count" style="color: #0f0;">5</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Revenue</h4>
+                        <div class="count">₹2,500</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3>Pending Approvals - MCA / Engg</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Leader</th>
+                                <th>Contact</th>
+                                <th>Trans ID</th>
+                                <th>Proof</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pg-table-body">
+                            <!-- Mock Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="img-modal" class="modal">
+        <img id="modal-img" src="" alt="Proof">
+        <div class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i> Close</div>
+    </div>
+
+    <script>
+        // --- Dummy Data ---
+        const ugTeams = [
+            { team: "Code Warriors", college: "Canara College", leader: "Arjun K", contact: "9876543210", email: "arjun@gmail.com", date: "2026-01-15" },
+            { team: "Byte Busters", college: "St. Aloysius", leader: "Sneha R", contact: "9876543211", email: "sneha@gmail.com", date: "2026-01-16" },
+            { team: "Cyber Knights", college: "SDM", leader: "Rahul M", contact: "9876543212", email: "rahul@gmail.com", date: "2026-01-16" },
+        ];
+
+        const pgTeams = [
+            { id: 1, team: "Tech Titans", leader: "Varun S", contact: "9988776655", email: "varun@gmail.com", transId: "UPI1234567890", status: "Pending", proof: "elements/earth.jpg" },
+            { id: 2, team: "Innovators", leader: "Priya D", contact: "9988776654", email: "priya@gmail.com", transId: "UPI0987654321", status: "Approved", proof: "elements/earth.jpg" },
+            { id: 3, team: "System Overload", leader: "Karthik", contact: "9988776653", email: "karthik@gmail.com", transId: "UPI1122334455", status: "Pending", proof: "elements/earth.jpg" },
+            { id: 4, team: "Null Pointers", leader: "Ananya", contact: "9988776652", email: "ananya@gmail.com", transId: "UPI5566778899", status: "Pending", proof: "elements/earth.jpg" }
+        ];
+
+        // --- Auth Logic ---
+        function checkAuth() {
+            const pass = document.getElementById('admin-pass').value;
+            // Hardcoded "secret" for static demo. In real app, verify securely.
+            if (pass === "SOLVE2026") {
+                document.getElementById('login-overlay').style.display = 'none';
+                const dashboard = document.getElementById('dashboard');
+                dashboard.style.filter = 'none';
+                dashboard.style.pointerEvents = 'all';
+                renderTables();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            location.reload();
+        }
+
+        // --- Tab Logic ---
+        function switchTab(tab) {
+            const ugSec = document.getElementById('ug-section');
+            const pgSec = document.getElementById('pg-section');
+            const title = document.getElementById('page-title');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            if (tab === 'ug') {
+                ugSec.classList.remove('hidden-section');
+                pgSec.classList.add('hidden-section');
+                title.innerText = "Cadet League Overview (UG)";
+                navItems[0].classList.add('active');
+                navItems[1].classList.remove('active');
+            } else {
+                ugSec.classList.add('hidden-section');
+                pgSec.classList.remove('hidden-section');
+                title.innerText = "Commander League Approvals (PG)";
+                navItems[0].classList.remove('active');
+                navItems[1].classList.add('active');
+            }
+        }
+
+        // --- Render Tables ---
+        function renderTables() {
+            // UG Table
+            const ugBody = document.getElementById('ug-table-body');
+            ugBody.innerHTML = ugTeams.map(t => `
+                <tr>
+                    <td style="font-weight: bold; color: #fff;">${t.team}</td>
+                    <td>${t.college}</td>
+                    <td>${t.leader}</td>
+                    <td>${t.contact}</td>
+                    <td>${t.email}</td>
+                    <td>${t.date}</td>
+                </tr>
+            `).join('');
+
+            // PG Table
+            renderPGTable();
+        }
+
+        function renderPGTable() {
+            const pgBody = document.getElementById('pg-table-body');
+            pgBody.innerHTML = pgTeams.map(t => `
+                <tr>
+                    <td style="font-weight: bold; color: #fff;">${t.team}</td>
+                    <td>${t.leader}</td>
+                    <td>${t.contact}</td>
+                    <td style="font-family: monospace; color: #aaa;">${t.transId}</td>
+                    <td><button class="action-btn btn-view" onclick="viewProof('${t.proof}')"><i class="fa-regular fa-image"></i> View</button></td>
+                    <td><span class="status-badge ${t.status === 'Approved' ? 'status-approved' : 'status-pending'}">${t.status}</span></td>
+                    <td>
+                        ${t.status === 'Pending' ?
+                    `<button class="action-btn btn-approve" onclick="approveTeam(${t.id})"><i class="fa-solid fa-check"></i> Approve</button>` :
+                    '<span style="color:#aaa;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- Approval Logic ---
+        function approveTeam(id) {
+            const team = pgTeams.find(t => t.id === id);
+            if (team) {
+                if (confirm(`Confirm payment receipt for team "${team.team}"? \n\nThis will send an approval notification to ${team.email}.`)) {
+                    team.status = "Approved";
+                    renderPGTable();
+                    alert(`Access Granted! \nNotification sent to Team Leader: ${team.leader}`);
+                }
+            }
+        }
+
+        // --- Modal Logic ---
+        function viewProof(src) {
+            document.getElementById('modal-img').src = src;
+            document.getElementById('img-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('img-modal').style.display = 'none';
+        }
+
+    </script>
+</body>
+
+</html>
