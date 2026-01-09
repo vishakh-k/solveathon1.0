@@ -1561,11 +1561,16 @@ model-viewer {
 
     /* Ensure team cards also behave nicely if not already */
     /* Ensure team cards also behave nicely if not already */
-    .team-grid,
     .query-grid,
     .footer-row {
         grid-template-columns: 1fr;
     }
+
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
 
     .rewards-card h3 {
         font-size: 2rem;
