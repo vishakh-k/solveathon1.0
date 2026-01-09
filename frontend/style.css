@@ -1566,6 +1566,16 @@ model-viewer {
     .footer-row {
         grid-template-columns: 1fr;
     }
+
+    .rewards-card h3 {
+        font-size: 2rem;
+        white-space: normal;
+    }
+
+    .price-tag {
+        font-size: 3rem;
+    }
+
 }
 
 /* === Registration Page Styles === */
