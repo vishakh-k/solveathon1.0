@@ -70,3 +70,17 @@ Now that your backend is live, you need to tell your frontend to talk to this ne
     4.  It restarts the server with the new code.
 
 This process ensures your live site always matches your latest GitHub code only a few minutes after you push!
+
+## 6. How to Update Your Live Site (Workflow)
+Just saving the file in VS Code is **NOT** enough. You must send the changes to GitHub for Render to see them.
+
+**Steps to update:**
+1.  **Modify:** Make your changes in the code.
+2.  **Save:** Save your files.
+3.  **Push:** Run these 3 commands in your terminal:
+    ```bash
+    git add .
+    git commit -m "Fixed a bug in backend"
+    git push origin main
+    ```
+4.  **Wait:** Go to your Render Dashboard. You will see a new deployment start automatically. In typically 2-3 minutes, your live site will be updated.
