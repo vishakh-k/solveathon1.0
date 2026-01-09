@@ -14,13 +14,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase SDKs (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-    <!-- Firebase Config -->
-    <script src="firebase-init.js"></script>
+    <!-- Backend Integration -->
+    <!-- Removed Firebase SDKs -->
 
     <style>
         /* Admin Specific Styles */
@@ -248,6 +243,47 @@
         .hidden-section {
             display: none;
         }
+
+        /* FIX: Ensure buttons on admin page are visible (overriding index.html GSAP styles) */
+        .btn {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .logo {
+                margin-bottom: 1rem !important;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -260,7 +296,7 @@
                 ACCESS</h2>
             <p style="color: #ccc; margin-bottom: 1.5rem;">Identify Yourself</p>
 
-            <input type="email" id="admin-email" placeholder="Commander ID (Email)"
+            <input type="email" id="admin-email" placeholder="Enter Commander ID"
                 style="padding: 10px; width: 100%; margin-bottom: 1rem; background: #000; border: 1px solid var(--primary-color); color: #fff; text-align: center;">
 
             <input type="password" id="admin-pass" placeholder="Passcode"
@@ -308,11 +344,11 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h4>Total Teams</h4>
-                        <div class="count">12</div>
+                        <div class="count" id="ug-total-count">0</div>
                     </div>
                     <div class="stat-card">
                         <h4>Total Participants</h4>
-                        <div class="count">48</div>
+                        <div class="count" id="ug-participant-count">0</div>
                     </div>
                 </div>
 
@@ -325,6 +361,7 @@
                                 <th>College</th>
                                 <th>Leader</th>
                                 <th>Contact</th>
+                                <th>Members</th>
                                 <th>Email</th>
                                 <th>Reg Date</th>
                             </tr>
@@ -341,15 +378,15 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h4>Pending Approvals</h4>
-                        <div class="count" style="color: orange;">3</div>
+                        <div class="count" id="pg-pending-count" style="color: orange;">0</div>
                     </div>
                     <div class="stat-card">
                         <h4>Approved Teams</h4>
-                        <div class="count" style="color: #0f0;">5</div>
+                        <div class="count" id="pg-approved-count" style="color: #0f0;">0</div>
                     </div>
                     <div class="stat-card">
                         <h4>Total Revenue</h4>
-                        <div class="count">₹2,500</div>
+                        <div class="count" id="pg-revenue-count">₹0</div>
                     </div>
                 </div>
 
@@ -359,8 +396,10 @@
                         <thead>
                             <tr>
                                 <th>Team Name</th>
+                                <th>College</th>
                                 <th>Leader</th>
                                 <th>Contact</th>
+                                <th>Members</th>
                                 <th>Trans ID</th>
                                 <th>Proof</th>
                                 <th>Status</th>
@@ -386,88 +425,128 @@
     <script>
         let ugTeams = [];
         let pgTeams = [];
-        let unsubscribe = null;
+        const BACKEND_URL = 'http://localhost:5001'; // Adjust if hosted elsewhere
 
         // --- Auth Logic ---
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in
-                document.getElementById('login-overlay').style.display = 'none';
-                const dashboard = document.getElementById('dashboard');
-                dashboard.style.filter = 'none';
-                dashboard.style.pointerEvents = 'all';
-
-                // Start listening to data
-                fetchData();
+        // Simple client-side check for this demo since we moved away from Firebase Auth
+        // In a real app, this should be a server-side session check
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem('adminAuth');
+            if (isAuth === 'true') {
+                showDashboard();
             } else {
-                // User is signed out
-                document.getElementById('login-overlay').style.display = 'flex';
-                document.getElementById('dashboard').style.filter = 'blur(5px)';
-                document.getElementById('dashboard').style.pointerEvents = 'none';
-
-                if (unsubscribe) unsubscribe();
+                showLogin();
             }
-        });
+        }
 
-        function login() {
+        function showDashboard() {
+            document.getElementById('login-overlay').style.display = 'none';
+            const dashboard = document.getElementById('dashboard');
+            dashboard.style.filter = 'none';
+            dashboard.style.pointerEvents = 'all';
+            fetchData();
+        }
+
+        function showLogin() {
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('dashboard').style.filter = 'blur(5px)';
+            document.getElementById('dashboard').style.pointerEvents = 'none';
+        }
+
+        async function login() {
             const email = document.getElementById('admin-email').value;
             const pass = document.getElementById('admin-pass').value;
             const errorMsg = document.getElementById('error-msg');
+            const btn = document.querySelector('.login-box button');
 
-            auth.signInWithEmailAndPassword(email, pass)
-                .catch((error) => {
-                    console.error("Login Failed", error);
-                    errorMsg.style.display = 'block';
-                    errorMsg.innerText = error.message;
+            btn.disabled = true;
+            btn.innerText = "Verifying...";
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: pass })
                 });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    sessionStorage.setItem('adminAuth', 'true');
+                    showDashboard();
+                } else {
+                    throw new Error("Invalid Credentials");
+                }
+            } catch (err) {
+                console.error("Login Failed", err);
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "Access Denied: " + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Access Dashboard";
+            }
         }
 
         function logout() {
-            auth.signOut();
+            sessionStorage.removeItem('adminAuth');
+            showLogin();
         }
 
+        // Initialize
+        checkAuth();
+
         // --- Data Logic ---
-        function fetchData() {
-            // Listen to real-time updates
-            unsubscribe = db.collection('registrations')
-                .orderBy('registeredAt', 'desc')
-                .onSnapshot((snapshot) => {
-                    ugTeams = [];
-                    pgTeams = [];
+        async function fetchData() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/registrations`);
+                if (!response.ok) throw new Error("Failed to fetch data");
+                const data = await response.json();
 
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        data.id = doc.id; // Store Doc ID for updates
+                ugTeams = [];
+                pgTeams = [];
 
-                        // Format Date
-                        if (data.registeredAt && data.registeredAt.toDate) {
-                            data.dateStr = data.registeredAt.toDate().toLocaleDateString();
-                        } else {
-                            data.dateStr = 'N/A';
-                        }
+                data.forEach((item) => {
+                    item.id = item._id; // Map MongoDB _id to id
 
-                        if (data.category === 'UG') {
-                            ugTeams.push(data);
-                        } else if (data.category === 'PG') {
-                            pgTeams.push(data);
-                        }
-                    });
+                    // Format Date
+                    const dateObj = new Date(item.registeredAt);
+                    item.dateStr = dateObj ? dateObj.toLocaleDateString() : 'N/A';
 
-                    // Update UI
-                    updateStats();
-                    renderTables();
-                }, (error) => {
-                    console.error("Error fetching data:", error);
-                    alert("Error fetching live data: " + error.message);
+                    if (item.category === 'UG') {
+                        ugTeams.push(item);
+                    } else if (item.category === 'PG') {
+                        pgTeams.push(item);
+                    }
                 });
+
+                updateStats();
+                renderTables();
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                alert("Error fetching data: " + error.message);
+            }
         }
 
         function updateStats() {
             // UG Stats
-            // Assuming this is how it would be structured if we separated them.
-            // For now, I'll just update logic if I had unique IDs for elements, 
-            // but the HTML currently hardcodes them inside cards.
-            // Be efficient: Update tables mostly.
+            if (document.getElementById('ug-total-count')) {
+                document.getElementById('ug-total-count').innerText = ugTeams.length;
+                // Count leader + members (members is array of 3 usually)
+                const totalUgPart = ugTeams.reduce((acc, t) => acc + 1 + (t.members ? t.members.length : 0), 0);
+                document.getElementById('ug-participant-count').innerText = totalUgPart;
+            }
+
+            // PG Stats
+            if (document.getElementById('pg-pending-count')) {
+                const pending = pgTeams.filter(t => t.status === 'Pending').length;
+                const approved = pgTeams.filter(t => t.status === 'Approved').length;
+                const revenue = approved * 500;
+
+                document.getElementById('pg-pending-count').innerText = pending;
+                document.getElementById('pg-approved-count').innerText = approved;
+                document.getElementById('pg-revenue-count').innerText = '₹' + revenue.toLocaleString('en-IN');
+            }
         }
 
         // --- Tab Logic ---
@@ -496,16 +575,22 @@
         function renderTables() {
             // UG Table
             const ugBody = document.getElementById('ug-table-body');
-            ugBody.innerHTML = ugTeams.map(t => `
+            ugBody.innerHTML = ugTeams.map(t => {
+                const memberDetails = t.members && t.members.length > 0
+                    ? t.members.map(m => `<div>${m.name} <span style="font-size:0.8em; color:#aaa;">(${m.contact})</span></div>`).join('')
+                    : '<span style="color:#555;">No Data</span>';
+
+                return `
                 <tr>
                     <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
                     <td>${t.college_name}</td>
                     <td>${t.leader.name}</td>
                     <td>${t.leader.contact}</td>
+                    <td>${memberDetails}</td>
                     <td>${t.leader.email}</td>
                     <td>${t.dateStr}</td>
                 </tr>
-            `).join('');
+            `}).join('');
 
             // PG Table
             renderPGTable();
@@ -513,45 +598,66 @@
 
         function renderPGTable() {
             const pgBody = document.getElementById('pg-table-body');
-            pgBody.innerHTML = pgTeams.map(t => `
+            pgBody.innerHTML = pgTeams.map(t => {
+                const hasProof = t.payment && t.payment.screenshotPath;
+                const proofUrl = hasProof
+                    ? (t.payment.screenshotPath.startsWith('http') ? t.payment.screenshotPath : `${BACKEND_URL}/${t.payment.screenshotPath}`)
+                    : '';
+
+                const memberDetails = t.members && t.members.length > 0
+                    ? t.members.map(m => `<div>${m.name} <span style="font-size:0.8em; color:#aaa;">(${m.contact})</span></div>`).join('')
+                    : '<span style="color:#555;">No Data</span>';
+
+                return `
                 <tr>
                     <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
+                    <td>${t.college_name}</td>
                     <td>${t.leader.name}</td>
                     <td>${t.leader.contact}</td>
+                    <td>${memberDetails}</td>
                     <td style="font-family: monospace; color: #aaa;">${t.payment ? t.payment.transactionId : 'N/A'}</td>
                     <td>
-                        ${t.payment && t.payment.screenShotUrl ?
-                    `<button class="action-btn btn-view" onclick="viewProof('${t.payment.screenShotUrl}')"><i class="fa-regular fa-image"></i> View</button>` :
-                    '<span style="color:#555;">No Proof</span>'}
+                        ${hasProof ?
+                        `<button class="action-btn btn-view" onclick="viewProof('${proofUrl}')"><i class="fa-regular fa-image"></i> View</button>` :
+                        '<span style="color:#555;">No Proof</span>'}
                     </td>
                     <td><span class="status-badge ${t.status === 'Approved' ? 'status-approved' : 'status-pending'}">${t.status}</span></td>
                     <td>
                         ${t.status === 'Pending' ?
-                    `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
-                    '<span style="color:#aaa;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
+                        `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
+                        '<span style="color:#aaa;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         // --- Approval Logic ---
-        function approveTeam(docId, teamName, email) {
+        async function approveTeam(docId, teamName, email) {
             if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database and prepare an approval email.`)) {
 
-                db.collection('registrations').doc(docId).update({
-                    status: 'Approved',
-                    'payment.verified': true
-                }).then(() => {
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/registrations/${docId}/status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: 'Approved' })
+                    });
+
+                    if (!response.ok) throw new Error("Update failed");
+
                     // Open Mailto Link
                     const subject = encodeURIComponent("Mission Clearance Granted: Solve-A-Thon 1.0");
                     const body = encodeURIComponent(`Greetings Team ${teamName},\n\nYour payment has been verified and your mission status is now APPROVED.\n\nGet ready for the launch sequence.\n\nRegards,\nMission Control\nAdmin Team`);
                     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
 
                     alert(`Access Granted to ${teamName}!`);
-                }).catch((error) => {
+                    fetchData(); // Refresh list
+
+                } catch (error) {
                     console.error("Error updating document: ", error);
                     alert("Error updating status: " + error.message);
-                });
+                }
             }
         }
 

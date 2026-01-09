@@ -1991,3 +1991,103 @@ input[type="file"]::file-selector-button {
 input[type="file"]:hover::file-selector-button {
     background: #fff;
 }
+
+/* Mobile Font Adjustments */
+@media screen and (max-width: 768px) {
+    .main-title {
+        font-size: 3.5rem;
+        /* Reduce from 6rem */
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+        /* Reduce from 3rem */
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        letter-spacing: 4px;
+    }
+
+    section {
+        padding: 4rem 5% 2rem;
+    }
+
+    .hero-content {
+        padding-top: 4rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .detail-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .nav-btn {
+        padding: 8px 15px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Success/Message Modal */
+.success-modal {
+    display: none;
+    /* JS toggles to flex */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(15px);
+}
+
+.success-content {
+    background: rgba(10, 10, 20, 0.95);
+    border: 2px solid var(--primary-color);
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 0 60px rgba(0, 243, 255, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.success-icon {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 10px var(--primary-color));
+}
+
+.success-title {
+    font-size: 2.5rem;
+    font-family: var(--font-heading);
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.success-message {
+    font-size: 1.4rem;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    white-space: pre-line;
+    /* Handle newlines in JS messages */
+}
+

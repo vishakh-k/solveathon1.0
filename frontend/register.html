@@ -18,14 +18,8 @@
     <!-- GSAP Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    <!-- Firebase SDKs (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-    <!-- Firebase Config -->
-    <script src="firebase-init.js"></script>
+    <!-- Backend Integration -->
+    <!-- Removed Firebase SDKs as we are now using a custom Node.js Backend -->
 </head>
 
 <body>
@@ -220,10 +214,13 @@
 
                             <div class="scanner-container" style="text-align: center; margin: 20px 0;">
                                 <!-- Placeholder for Scanner -->
-                                <div class="qr-placeholder"
-                                    style="width: 200px; height: 200px; background: #fff; margin: 0 auto; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
-                                    <span style="color: #000; font-weight: bold;">UPI SCANNER HERE</span>
-                                </div>
+                                <img src="elements/payment_qr.jpg" alt="Payment QR Code"
+                                    style="width: 200px; height: auto; border-radius: 10px; border: 2px solid var(--primary-color); box-shadow: 0 0 15px rgba(0,243,255,0.2);">
+                                <h5
+                                    style="color: #fff; margin-top: 10px; font-family: var(--font-heading); letter-spacing: 1px;">
+                                    RAJESH NAIK</h5>
+                                <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 5px;">Faculty Coordinator</p>
+                                <p style="color: var(--primary-color); font-size: 0.8rem;">MCA Department, SIT</p>
                                 <p style="margin-top: 10px; color: #ccc;">Scan to Pay</p>
                             </div>
 
@@ -269,8 +266,21 @@
         </div>
     </section>
 
+
+    <!-- Message Modal (Generic for Success/Error) -->
+    <div id="message-modal" class="success-modal">
+        <div class="success-content" id="modal-content">
+            <i class="fa-solid fa-circle-check success-icon" id="modal-icon"></i>
+            <h2 class="success-title" id="modal-title">Mission Confirmed!</h2>
+            <p id="modal-text" class="success-message">Welcome to the squadron.</p>
+            <button class="btn primary-btn" onclick="closeModal()"
+                style="margin-top: 1rem; width: auto; padding: 0.5rem 1.5rem;">Acknowledge</button>
+        </div>
+    </div>
+
     <!-- Contact Section -->
     <footer id="footer">
+        <!-- Footer content remains same -->
         <div class="footer-container">
             <h2 class="footer-main-title">Establish Contact</h2>
 
@@ -329,6 +339,15 @@
     </footer>
 
     <script>
+        // --- AUTH CHECK ---
+        const user = JSON.parse(localStorage.getItem('solveathon_user'));
+
+        // Redirect if not logged in
+        if (!user || !user.id) {
+            alert("Access Denied: Please login first.");
+            window.location.href = 'user_login.html';
+        }
+
         // Inline script for page specific logic
 
         // Loader
@@ -336,6 +355,15 @@
             const loader = document.getElementById('loader');
             if (loader) {
                 gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
+            }
+
+            // Setup Form with User Data
+            if (user) {
+                // Auto-select category based on user profile if available, or default
+                if (user.category) {
+                    // You might want to auto-open the form or just restrict them
+                    console.log("User Category:", user.category);
+                }
             }
 
             // Animate Cards Entry
@@ -349,11 +377,67 @@
             });
         });
 
+        // Message Modal Logic
+        function showMessage(type, title, message) {
+            const modal = document.getElementById('message-modal');
+            const content = document.getElementById('modal-content');
+            const icon = document.getElementById('modal-icon');
+            const titleEl = document.getElementById('modal-title');
+            const textEl = document.getElementById('modal-text');
+
+            // Reset styles
+            icon.className = '';
+
+            if (type === 'error') {
+                icon.className = 'fa-solid fa-triangle-exclamation success-icon';
+                icon.style.color = '#ff4444'; // Red for error
+                titleEl.style.color = '#ff4444';
+            } else {
+                icon.className = 'fa-solid fa-circle-check success-icon';
+                icon.style.color = 'var(--primary-color)';
+                titleEl.style.color = 'var(--primary-color)';
+            }
+
+            titleEl.innerText = title;
+            textEl.innerText = message;
+
+            modal.style.display = 'flex';
+            gsap.fromTo(content, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('message-modal');
+            gsap.to(modal.querySelector('.success-content'), {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.3,
+                onComplete: () => { modal.style.display = 'none'; }
+            });
+        }
+
         // Form Toggle Logic
         function showForm(type) {
+            // Validation: Ensure user stays in their category
+            if (user.category && user.category !== type) {
+                // Use the Modal instead of Alert
+                const correctLeague = user.category === 'UG' ? 'Cadet League' : 'Commander League';
+                const wrongLeague = type === 'UG' ? 'Cadet League' : 'Commander League';
+
+                showMessage('error', 'Access Denied', `You are registered as a ${user.category} candidate. You cannot join the ${wrongLeague}.`);
+                return;
+            }
+
             const formContainer = document.getElementById('enlist-form-container');
             const formTitle = document.getElementById('form-title');
             const categoryInput = document.getElementById('category-input');
+
+            // Pre-fill Data
+            document.querySelector('input[name="college_name"]').value = user.college || ''; // Assuming college was stored if possible, else empty
+            document.querySelector('input[name="team_name"]').value = user.team || '';
+            document.querySelector('input[name="leader_email"]').value = user.email || '';
+            // Leader name might not be in the basic user object properly unless we updated login response. 
+            // For now, email and team are key.
+
             const paymentSection = document.getElementById('payment-section');
             const paymentInputs = paymentSection.querySelectorAll('input');
 
@@ -402,7 +486,7 @@
                 ease: "power2.in",
                 onComplete: () => {
                     formContainer.classList.add('hidden');
-                    document.getElementById('missionForm').reset();
+                    // Don't fully reset, keep user data
                 }
             });
 
@@ -410,7 +494,9 @@
             document.querySelector('.section-title').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // --- FIREBASE SUBMISSION LOGIC ---
+
+
+        // --- BACKEND SUBMISSION LOGIC ---
         const missionForm = document.getElementById('missionForm');
         missionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -423,57 +509,43 @@
             try {
                 // Collect Form Data
                 const formData = new FormData(missionForm);
+
+                // Append User ID
+                formData.append('user_id', user.id);
+
                 const category = formData.get('category');
-                const stamp = new Date();
 
-                const teamData = {
-                    category: category,
-                    college_name: formData.get('college_name'),
-                    team_name: formData.get('team_name'),
-                    leader: {
-                        name: formData.get('leader_name'),
-                        contact: formData.get('leader_contact'),
-                        email: formData.get('leader_email')
-                    },
-                    members: [
-                        { name: formData.get('member2_name'), contact: formData.get('member2_contact'), email: formData.get('member2_email') },
-                        { name: formData.get('member3_name'), contact: formData.get('member3_contact'), email: formData.get('member3_email') },
-                        { name: formData.get('member4_name'), contact: formData.get('member4_contact'), email: formData.get('member4_email') }
-                    ],
-                    registeredAt: stamp,
-                    status: category === 'UG' ? 'Approved' : 'Pending', // UG is auto-approved (Free)
-                    payment: null
-                };
+                // Send to Backend
+                const response = await fetch('http://localhost:5001/api/register', {
+                    method: 'POST',
+                    body: formData // Automatic Content-Type header for multipart/form-data
+                });
 
-                // Handle PG Payment Upload
-                if (category === 'PG') {
-                    const transId = formData.get('transaction_id');
-                    const file = formData.get('payment_screenshot');
+                const result = await response.json();
 
-                    if (file && file.size > 0) {
-                        const storageRef = storage.ref(`payment_proofs/${teamData.team_name}_${stamp.getTime()}`);
-                        const snapshot = await storageRef.put(file);
-                        const downloadURL = await snapshot.ref.getDownloadURL();
-
-                        teamData.payment = {
-                            transactionId: transId,
-                            screenShotUrl: downloadURL,
-                            verified: false
-                        };
-                    }
+                if (!response.ok) {
+                    throw new Error(result.message || 'Server error');
                 }
 
-                // Save to Firestore
-                await db.collection('registrations').add(teamData);
+                const teamData = result.registration;
 
                 // Success Feedback
-                alert(`Mission Enlistment Successful!\n\nSquadron: ${teamData.team_name}\nStatus: ${teamData.status}\n\n${category === 'PG' ? 'Commander League: Pending Payment Verification. You will be notified upon approval.' : 'Cadet League: You are good to go!'}`);
-
                 hideForm();
+
+                let msg = '';
+                if (category === 'UG') {
+                    // UG Specific Message
+                    msg = `Successfully joined as Team ${teamData.team_name}. Mission Status: APPROVED.`;
+                } else {
+                    // PG Message
+                    msg = `Mission Status: PENDING CLASSIFIED APPROVAL.\n\nYour data has been transmitted. Final activation awaits Admin Clearance.`;
+                }
+
+                showMessage('success', 'Transmission Received', msg);
 
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("Mission Failed: Error submitting data. Please try again.\n" + error.message);
+                alert("Mission Failed: " + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;

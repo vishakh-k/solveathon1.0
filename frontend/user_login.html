@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enlist Info - Solve-A-Thon 1.0</title>
+    <meta name="description"
+        content="Register for Solve-A-Thon 1.0. Choose your category: UG (BCA/BSc) or PG/Engineering (MCA/MSc/BE).">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="elements/favicon.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Backend Integration -->
+    <!-- Removed Firebase SDKs as we are now using a custom Node.js Backend -->
+</head>
+
+
+
+<body>
+
+    <!-- Simple Loader -->
+    <div id="loader" class="page-loader">
+        <div class="jet-container">
+            <img src="elements/loading_jet.png" alt="Loading" class="loading-jet-img-sm">
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" class="logo-text">
+                SOLVEATHON 1.0 <i class="fa-solid fa-jet-fighter-up"></i>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="user_login.html" class="nav-btn active-page">Login</a></li>
+            <li><a href="user_register.html">Sign Up</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section id="login-page">
+        <div class="container" style="display: flex; justify-content: center;">
+
+            <div class="form-panel"
+                style="max-width: 400px; margin-top: 4rem; opacity: 1; height: auto; border-color: var(--primary-color);">
+                <div class="form-header" style="justify-content: center;">
+                    <h3><i class="fa-solid fa-user-lock"></i> Officer Login</h3>
+                </div>
+
+                <form id="loginForm">
+
+                    <div class="input-group">
+                        <label>Email ID</label>
+                        <input type="email" name="email" placeholder="email@example.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Enter Password" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary-btn glow-effect" style="width: 100%;">Login</button>
+                    </div>
+
+                    <p style="text-align: center; margin-top: 1.5rem; color: #aaa;">
+                        New Recruit? <a href="user_register.html" style="color: var(--primary-color);">Enlist Here</a>
+                    </p>
+
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Background Elements -->
+        <div class="hero-background">
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-modal">
+        <div class="success-content">
+            <i class="fa-solid fa-circle-check success-icon"></i>
+            <h2 class="success-title">Access Granted!</h2>
+            <p id="success-text" class="success-message">Welcome back, Officer.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Solve-A-Thon 1.0 | Department of MCA, SIT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
+            }
+        });
+
+        // Hamburger
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Success Modal Logic
+        function showSuccess(message, redirectUrl) {
+            const modal = document.getElementById('success-modal');
+            const content = modal.querySelector('.success-content');
+            const textElement = document.getElementById('success-text');
+
+            textElement.innerText = message;
+            modal.style.display = 'flex';
+
+            // Animate In
+            gsap.to(content, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" });
+
+            // Redirect after delay
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000);
+        }
+
+        // Login Logic
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = loginForm.querySelector('button');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "Verifying...";
+
+            const formData = new FormData(loginForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                // Ensure using port 5001 as fixed previously
+                const response = await fetch('http://localhost:5001/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Store user session data
+                    localStorage.setItem('solveathon_user', JSON.stringify(result.user));
+                    showSuccess("Login Successful! Welcome Team " + result.user.team, 'register.html');
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        });
+    </script>
+</body>
