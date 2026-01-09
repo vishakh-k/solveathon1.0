@@ -1754,10 +1754,13 @@ model-viewer {
 }
 
 .close-form {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background: none;
     border: none;
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -2066,6 +2069,26 @@ input[type="file"]:hover::file-selector-button {
     align-items: center;
 }
 
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+.close-modal-btn:hover {
+    color: var(--primary-color);
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
 .success-icon {
     font-size: 5rem;
     margin-bottom: 2rem;
@@ -2090,4 +2113,3 @@ input[type="file"]:hover::file-selector-button {
     white-space: pre-line;
     /* Handle newlines in JS messages */
 }
-
