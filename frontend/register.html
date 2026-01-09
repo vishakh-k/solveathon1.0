@@ -338,6 +338,7 @@
         </div>
     </footer>
 
+    <script src="config.js"></script>
     <script>
         // --- AUTH CHECK ---
         const user = JSON.parse(localStorage.getItem('solveathon_user'));
@@ -516,7 +517,7 @@
                 const category = formData.get('category');
 
                 // Send to Backend
-                const response = await fetch('http://localhost:5001/api/register', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/register`, {
                     method: 'POST',
                     body: formData // Automatic Content-Type header for multipart/form-data
                 });

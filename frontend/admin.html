@@ -422,10 +422,11 @@
         <div class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i> Close</div>
     </div>
 
+    <script src="config.js"></script>
     <script>
         let ugTeams = [];
         let pgTeams = [];
-        const BACKEND_URL = 'http://localhost:5001'; // Adjust if hosted elsewhere
+        const BACKEND_URL = API_CONFIG.BASE_URL;
 
         // --- Auth Logic ---
         // Simple client-side check for this demo since we moved away from Firebase Auth
