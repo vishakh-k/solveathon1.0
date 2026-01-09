@@ -429,8 +429,6 @@
         const BACKEND_URL = API_CONFIG.BASE_URL;
 
         // --- Auth Logic ---
-        // Simple client-side check for this demo since we moved away from Firebase Auth
-        // In a real app, this should be a server-side session check
         function checkAuth() {
             const isAuth = sessionStorage.getItem('adminAuth');
             if (isAuth === 'true') {
@@ -474,6 +472,7 @@
 
                 if (result.success) {
                     sessionStorage.setItem('adminAuth', 'true');
+                    sessionStorage.setItem('adminKey', result.key); // Store the API Key
                     showDashboard();
                 } else {
                     throw new Error("Invalid Credentials");
@@ -490,6 +489,7 @@
 
         function logout() {
             sessionStorage.removeItem('adminAuth');
+            sessionStorage.removeItem('adminKey'); // Clear Key
             showLogin();
         }
 
@@ -499,7 +499,19 @@
         // --- Data Logic ---
         async function fetchData() {
             try {
-                const response = await fetch(`${BACKEND_URL}/api/registrations`);
+                const adminKey = sessionStorage.getItem('adminKey');
+                const response = await fetch(`${BACKEND_URL}/api/registrations`, {
+                    headers: {
+                        'x-admin-key': adminKey // Send the Key
+                    }
+                });
+
+                if (response.status === 401) {
+                    alert("Session Expired or Unauthorized");
+                    logout();
+                    return;
+                }
+
                 if (!response.ok) throw new Error("Failed to fetch data");
                 const data = await response.json();
 
@@ -636,16 +648,19 @@
         async function approveTeam(docId, teamName, email) {
             if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database and prepare an approval email.`)) {
 
+                const adminKey = sessionStorage.getItem('adminKey');
+
                 try {
                     const response = await fetch(`${BACKEND_URL}/api/registrations/${docId}/status`, {
                         method: 'PATCH',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'x-admin-key': adminKey // Send the Key
                         },
                         body: JSON.stringify({ status: 'Approved' })
                     });
 
-                    if (!response.ok) throw new Error("Update failed");
+                    if (!response.ok) throw new Error("Update failed or Unauthorized");
 
                     // Open Mailto Link
                     const subject = encodeURIComponent("Mission Clearance Granted: Solve-A-Thon 1.0");

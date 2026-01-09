@@ -82,6 +82,18 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/solveathon'
 
 // --- AUTHENTICATION ROUTES ---
 
+// Admin Middleware
+const requireAdmin = (req, res, next) => {
+    const adminKey = req.headers['x-admin-key'];
+    const secret = process.env.ADMIN_SECRET || 'admin123';
+
+    if (adminKey && adminKey === secret) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Unauthorized: Security Clearance Required' });
+    }
+};
+
 // User Signup
 app.post('/api/auth/signup', async (req, res) => {
     try {
@@ -162,7 +174,8 @@ app.post('/api/admin/login', (req, res) => {
     const adminPass = process.env.ADMIN_SECRET || 'admin123';
 
     if (email === adminEmail && password === adminPass) {
-        res.json({ success: true, message: 'Access Granted' });
+        // Return the 'key' (secret) to the frontend so it can be used for subsequent requests
+        res.json({ success: true, message: 'Access Granted', key: adminPass });
     } else {
         res.status(401).json({ success: false, message: 'Invalid Credentials' });
     }
@@ -228,7 +241,8 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
     }
 });
 
-app.get('/api/registrations', async (req, res) => {
+// PROTECTED ROUTES (Require Admin)
+app.get('/api/registrations', requireAdmin, async (req, res) => {
     try {
         const registrations = await Registration.find().sort({ registeredAt: -1 });
         res.json(registrations);
@@ -237,7 +251,7 @@ app.get('/api/registrations', async (req, res) => {
     }
 });
 
-app.patch('/api/registrations/:id/status', async (req, res) => {
+app.patch('/api/registrations/:id/status', requireAdmin, async (req, res) => {
     try {
         const { status } = req.body;
         const registration = await Registration.findByIdAndUpdate(req.params.id, { status }, { new: true });
