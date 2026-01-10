@@ -251,6 +251,94 @@
             cursor: pointer;
         }
 
+        /* Confirmation Modal Styles */
+        .confirm-box {
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .confirm-box h3 {
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .confirm-box p {
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-confirm-yes {
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff5555;
+            border: 1px solid #ff5555;
+            padding: 10px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: var(--font-heading);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-confirm-yes:hover {
+            background: #ff5555;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
+        }
+
+        .btn-confirm-success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: var(--font-heading);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-confirm-success:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn-confirm-cancel {
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #555;
+            padding: 10px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+        }
+
+        .btn-confirm-cancel:hover {
+            color: #fff;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .hidden-section {
             display: none;
         }
@@ -434,6 +522,18 @@
         <div class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i> Close</div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="confirm-box">
+            <h3>CONFIRM ACTION</h3>
+            <p id="confirm-text">Are you sure?</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" onclick="closeConfirmModal(false)">Cancel</button>
+                <button class="btn-confirm-yes" id="confirm-yes-btn">DELETE</button>
+            </div>
+        </div>
+    </div>
+
     <script src="config.js"></script>
     <script>
         let ugTeams = [];
@@ -615,7 +715,9 @@
                     <td>${t.leader.email}</td>
                     <td>${t.dateStr}</td>
                     <td>
-                        <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </td>
                 </tr>
             `}).join('');
@@ -651,10 +753,12 @@
                     </td>
                     <td><span class="status-badge ${t.status === 'Approved' ? 'status-approved' : 'status-pending'}">${t.status}</span></td>
                     <td>
-                        ${t.status === 'Pending' ?
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            ${t.status === 'Pending' ?
                         `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
-                        '<span style="color:#aaa; display:inline-block; margin-right:5px;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
-                        <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                        '<span style="color:#aaa; display:inline-block;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
+                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </td>
                 </tr>
             `}).join('');
@@ -662,7 +766,14 @@
 
         // --- Approval Logic ---
         async function approveTeam(docId, teamName, email) {
-            if (confirm(`Confirm payment receipt for team "${teamName}"? \n\nThis will update the database and prepare an approval email.`)) {
+            const isConfirmed = await showConfirm(
+                `Confirm payment receipt for team "${teamName}"?`,
+                `This will update the database and prepare an approval email.`,
+                "APPROVE",
+                false // Not destructive
+            );
+
+            if (isConfirmed) {
 
                 const adminKey = sessionStorage.getItem('adminKey');
 
@@ -695,7 +806,14 @@
 
         // --- Delete Logic ---
         async function deleteTeam(docId, teamName) {
-            if (confirm(`Are you sure you want to PERMANENTLY DELETE the team "${teamName}"?\n\nThis action cannot be undone.`)) {
+            const isConfirmed = await showConfirm(
+                `Are you sure you want to PERMANENTLY DELETE the team "${teamName}"?`,
+                `This action cannot be undone.`,
+                "DELETE",
+                true // Destructive
+            );
+
+            if (isConfirmed) {
 
                 const adminKey = sessionStorage.getItem('adminKey');
 
@@ -730,6 +848,45 @@
 
         function closeModal() {
             document.getElementById('img-modal').style.display = 'none';
+        }
+
+        // --- Custom Confirm Modal Logic ---
+        let confirmResolver = null;
+
+        function showConfirm(titleMsg, subMsg, btnText = 'CONFIRM', isDestructive = false) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                const textElem = document.getElementById('confirm-text');
+                const yesBtn = document.getElementById('confirm-yes-btn');
+
+                textElem.innerHTML = `${titleMsg}<br><br><span style="font-size: 0.9em; color: ${isDestructive ? '#ff5555' : '#ccc'};">${subMsg}</span>`;
+                yesBtn.innerText = btnText;
+
+                // Dynamic Styling
+                if (isDestructive) {
+                    yesBtn.className = 'btn-confirm-yes';
+                } else {
+                    yesBtn.className = 'btn-confirm-success';
+                }
+
+                modal.style.display = 'flex';
+
+                // Store resolve function
+                confirmResolver = resolve;
+
+                // Set up Yes button
+                yesBtn.onclick = () => {
+                    closeConfirmModal(true);
+                };
+            });
+        }
+
+        function closeConfirmModal(result) {
+            document.getElementById('confirm-modal').style.display = 'none';
+            if (confirmResolver) {
+                confirmResolver(result);
+                confirmResolver = null;
+            }
         }
     </script>
 </body>

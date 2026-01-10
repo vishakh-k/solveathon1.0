@@ -263,10 +263,21 @@ app.patch('/api/registrations/:id/status', requireAdmin, async (req, res) => {
 
 app.delete('/api/registrations/:id', requireAdmin, async (req, res) => {
     try {
-        const deletedRegistration = await Registration.findByIdAndDelete(req.params.id);
-        if (!deletedRegistration) {
+        // Find the registration first to get the user_id
+        const registration = await Registration.findById(req.params.id);
+
+        if (!registration) {
             return res.status(404).json({ message: 'Registration not found' });
         }
+
+        // Delete the registration
+        await Registration.findByIdAndDelete(req.params.id);
+
+        // Reset the user's registration status so they can register again if needed
+        if (registration.user_id) {
+            await User.findByIdAndUpdate(registration.user_id, { is_registered_for_event: false });
+        }
+
         res.json({ message: 'Registration deleted successfully', id: req.params.id });
     } catch (err) {
         console.error("Delete Error:", err);
