@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const jetDivider = document.querySelector('.divider-jet');
     if (jetDivider) {
         gsap.fromTo(jetDivider,
-            { x: '-10vw' },
+            { x: '-20vw' },
             {
-                x: '110vw',
-                duration: 3,
+                x: '120vw',
+                duration: 1.5,
                 ease: "none",
                 repeat: -1,
                 repeatDelay: 5 // Jet passes every 5 seconds

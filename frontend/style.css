@@ -536,6 +536,7 @@ model-viewer {
 
 .divider-jet {
     position: absolute;
+    left: 0;
     font-size: 2rem;
     color: var(--primary-color);
     filter: drop-shadow(0 0 10px var(--primary-color));
