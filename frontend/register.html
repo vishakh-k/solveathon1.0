@@ -58,8 +58,26 @@
             <h2 class="section-title">Mission Enlistment</h2>
             <p class="subtitle centered-subtitle">Select your Squadron Category</p>
 
+            <!-- Status Dashboard (Hidden by default) -->
+            <div id="status-dashboard" class="glass-panel hidden"
+                style="max-width: 600px; margin: 0 auto; text-align: center; padding: 3rem;">
+                <div id="status-icon" style="font-size: 4rem; margin-bottom: 1.5rem;"></div>
+                <h3 id="status-title"
+                    style="color: var(--primary-color); font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1rem;">
+                </h3>
+
+                <div id="status-details" style="margin-bottom: 2rem; color: #ccc; line-height: 1.6;"></div>
+
+                <div class="status-badge-lg" id="status-badge"
+                    style="display: inline-block; padding: 10px 25px; border-radius: 50px; font-weight: bold; font-family: var(--font-heading); letter-spacing: 1px; margin-bottom: 2rem;">
+                    PENDING
+                </div>
+
+                <div id="status-actions"></div>
+            </div>
+
             <!-- Category Selection Cards -->
-            <div class="registration-grid">
+            <div class="registration-grid" id="registration-options">
 
                 <!-- UG Card -->
                 <div class="reg-card glass-panel" id="ug-card">
@@ -377,7 +395,82 @@
                 ease: "power3.out",
                 delay: 0.2
             });
+
+            // Check if User is already registered
+            checkRegistrationStatus();
         });
+
+        async function checkRegistrationStatus() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/user/${user.id}/registration`);
+                if (response.ok) {
+                    const registration = await response.json();
+                    showStatusDashboard(registration);
+                }
+            } catch (error) {
+                console.error("Status Check Failed", error);
+            }
+        }
+
+        function showStatusDashboard(data) {
+            // Hide Options
+            document.getElementById('registration-options').style.display = 'none';
+            document.querySelector('.subtitle').style.display = 'none';
+            document.querySelector('.section-title').innerText = "Mission Control";
+
+            const dashboard = document.getElementById('status-dashboard');
+            const icon = document.getElementById('status-icon');
+            const title = document.getElementById('status-title');
+            const details = document.getElementById('status-details');
+            const badge = document.getElementById('status-badge');
+
+            dashboard.classList.remove('hidden');
+
+            if (data.status === 'Approved') {
+                // APPROVED STATE
+                icon.innerHTML = '<i class="fa-solid fa-medal" style="color: #0f0; text-shadow: 0 0 20px #0f0;"></i>';
+                title.innerText = "MISSION GRANTED";
+                details.innerHTML = `
+                    <p>Welcome back, Team <strong>${data.team_name}</strong>.</p>
+                    <p>Your squad is fully authorized for launch.</p>
+                    <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <p style="color: var(--primary-color);">Category: ${data.category}</p>
+                        <p style="font-size: 0.9em; opacity: 0.8;">Leader: ${data.leader.name}</p>
+                    </div>
+                `;
+                badge.innerText = "STATUS: ACTIVE";
+                badge.style.background = "rgba(0, 255, 0, 0.1)";
+                badge.style.color = "#0f0";
+                badge.style.border = "1px solid #0f0";
+                badge.style.boxShadow = "0 0 15px rgba(0, 255, 0, 0.3)";
+
+            } else if (data.status === 'Pending') {
+                // PENDING STATE
+                icon.innerHTML = '<i class="fa-solid fa-hourglass-half fa-spin-pulse" style="color: orange; text-shadow: 0 0 20px orange;"></i>';
+                title.innerText = "AWAITING CLEARANCE";
+                details.innerHTML = `
+                    <p>Greetings, Team <strong>${data.team_name}</strong>.</p>
+                    <p>Your transaction is currently under verification by Mission Control.</p>
+                    <p style="font-size: 0.9em; margin-top: 10px; color: #aaa;">Please standby for Admin approval. This may take up to 24 hours.</p>
+                `;
+                badge.innerText = "STATUS: PENDING";
+                badge.style.background = "rgba(255, 165, 0, 0.1)";
+                badge.style.color = "orange";
+                badge.style.border = "1px solid orange";
+                badge.style.boxShadow = "0 0 15px rgba(255, 165, 0, 0.3)";
+
+            } else {
+                // REJECTED STATE
+                icon.innerHTML = '<i class="fa-solid fa-ban" style="color: #ff4444;"></i>';
+                title.innerText = "MISSION ABORTED";
+                badge.innerText = "STATUS: REJECTED";
+                badge.style.color = "#ff4444";
+                badge.style.borderColor = "#ff4444";
+            }
+
+            // Animate Dashboard
+            gsap.from(dashboard, { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" });
+        }
 
         // Message Modal Logic
         function showMessage(type, title, message) {

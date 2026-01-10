@@ -241,6 +241,20 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
     }
 });
 
+// Get Registration by User ID
+app.get('/api/user/:userId/registration', async (req, res) => {
+    try {
+        const registration = await Registration.findOne({ user_id: req.params.userId });
+        if (!registration) {
+            return res.status(404).json({ message: 'Registration not found' });
+        }
+        res.json(registration);
+    } catch (err) {
+        console.error("Fetch Registration Error:", err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // PROTECTED ROUTES (Require Admin)
 app.get('/api/registrations', requireAdmin, async (req, res) => {
     try {
