@@ -707,7 +707,10 @@
                         }
                     });
 
-                    if (!response.ok) throw new Error("Delete failed or Unauthorized");
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.message || `Status: ${response.status} ${response.statusText}`);
+                    }
 
                     alert(`Team "${teamName}" has been deleted.`);
                     fetchData(); // Refresh list
