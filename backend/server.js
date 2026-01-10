@@ -261,6 +261,19 @@ app.patch('/api/registrations/:id/status', requireAdmin, async (req, res) => {
     }
 });
 
+app.delete('/api/registrations/:id', requireAdmin, async (req, res) => {
+    try {
+        const deletedRegistration = await Registration.findByIdAndDelete(req.params.id);
+        if (!deletedRegistration) {
+            return res.status(404).json({ message: 'Registration not found' });
+        }
+        res.json({ message: 'Registration deleted successfully', id: req.params.id });
+    } catch (err) {
+        console.error("Delete Error:", err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // Debug Routes
 app.get('/', (req, res) => {
     res.send('API is Running');

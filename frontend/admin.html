@@ -211,6 +211,17 @@
             border: 1px solid var(--primary-color);
         }
 
+        .btn-delete {
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff5555;
+            border: 1px solid #ff5555;
+        }
+
+        .btn-delete:hover {
+            background: #ff5555;
+            color: #fff;
+        }
+
         /* Modal for Screenshot */
         .modal {
             display: none;
@@ -364,6 +375,7 @@
                                 <th>Members</th>
                                 <th>Email</th>
                                 <th>Reg Date</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="ug-table-body">
@@ -602,6 +614,9 @@
                     <td>${memberDetails}</td>
                     <td>${t.leader.email}</td>
                     <td>${t.dateStr}</td>
+                    <td>
+                        <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
                 </tr>
             `}).join('');
 
@@ -638,7 +653,8 @@
                     <td>
                         ${t.status === 'Pending' ?
                         `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
-                        '<span style="color:#aaa;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
+                        '<span style="color:#aaa; display:inline-block; margin-right:5px;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
+                        <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `}).join('');
@@ -673,6 +689,32 @@
                 } catch (error) {
                     console.error("Error updating document: ", error);
                     alert("Error updating status: " + error.message);
+                }
+            }
+        }
+
+        // --- Delete Logic ---
+        async function deleteTeam(docId, teamName) {
+            if (confirm(`Are you sure you want to PERMANENTLY DELETE the team "${teamName}"?\n\nThis action cannot be undone.`)) {
+
+                const adminKey = sessionStorage.getItem('adminKey');
+
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/registrations/${docId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'x-admin-key': adminKey
+                        }
+                    });
+
+                    if (!response.ok) throw new Error("Delete failed or Unauthorized");
+
+                    alert(`Team "${teamName}" has been deleted.`);
+                    fetchData(); // Refresh list
+
+                } catch (error) {
+                    console.error("Error deleting document: ", error);
+                    alert("Error deleting team: " + error.message);
                 }
             }
         }
