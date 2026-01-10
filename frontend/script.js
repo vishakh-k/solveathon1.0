@@ -121,8 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
         patrolTl
             .set(jetDivider, { rotation: 90, x: '10px' }) // Start slightly in
             .to(jetDivider, { x: 'calc(100vw - 50px)', duration: 2, ease: "power1.inOut" }) // Go right
+            .to({}, { duration: 1 }) // Stay at right
             .set(jetDivider, { rotation: -90 }) // Flip
-            .to(jetDivider, { x: '10px', duration: 2, ease: "power1.inOut" }); // Go left
+            .to(jetDivider, { x: '10px', duration: 2, ease: "power1.inOut" }) // Go left
+            .to({}, { duration: 1 }); // Stay at left
     }
 
     // Apply fade-in animation logic to glass-panels if needed, 
