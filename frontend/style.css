@@ -952,13 +952,14 @@ model-viewer {
 }
 
 /* Back to Top Button */
+/* Back to Top Button */
 .back-to-top {
     position: fixed;
     bottom: 30px;
     right: 30px;
     width: 60px;
     height: 60px;
-    background: rgba(0, 0, 0, 0.6);
+    background: url('elements/2.png') no-repeat center center/cover;
     border: 2px solid var(--primary-color);
     border-radius: 50%;
     display: flex;
@@ -967,22 +968,34 @@ model-viewer {
     z-index: 1000;
     transition: all 0.3s;
     backdrop-filter: blur(5px);
-    opacity: 0;
-    /* Hidden by default */
-    pointer-events: none;
-    transform: translateY(20px);
-}
-
-.back-to-top.visible {
     opacity: 1;
+    /* Always visible */
     pointer-events: all;
     transform: translateY(0);
+    animation: floatBtn 3s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+@keyframes floatBtn {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .back-to-top:hover {
-    background: var(--primary-color);
-    box-shadow: 0 0 20px var(--primary-color);
-    transform: translateY(-5px) rotate(-10deg);
+    box-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--primary-color);
+    transform: scale(1.1);
+}
+
+.back-to-top:active {
+    transform: translateY(-50px) scale(0.8);
+    transition: transform 0.1s;
 }
 
 .back-to-top img {
@@ -990,8 +1003,7 @@ model-viewer {
     height: 35px;
     object-fit: contain;
     transition: transform 0.5s;
-    transform: rotate(0deg);
-    /* Adjust based on image orientation */
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
 }
 
 /* Team Section */
