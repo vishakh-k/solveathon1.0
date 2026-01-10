@@ -119,10 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (jetDivider) {
         const patrolTl = gsap.timeline({ repeat: -1 });
         patrolTl
-            .set(jetDivider, { rotation: 90 }) // Ensure facing right
-            .fromTo(jetDivider, { x: '-20vw' }, { x: '120vw', duration: 2, ease: "power1.inOut" })
-            .set(jetDivider, { rotation: -90 }) // Flip to face left
-            .to(jetDivider, { x: '-20vw', duration: 2, ease: "power1.inOut" });
+            .set(jetDivider, { rotation: 90, x: '10px' }) // Start slightly in
+            .to(jetDivider, { x: 'calc(100vw - 50px)', duration: 2, ease: "power1.inOut" }) // Go right
+            .set(jetDivider, { rotation: -90 }) // Flip
+            .to(jetDivider, { x: '10px', duration: 2, ease: "power1.inOut" }); // Go left
     }
 
     // Apply fade-in animation logic to glass-panels if needed, 
