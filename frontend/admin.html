@@ -500,6 +500,7 @@
                                 <th>Leader</th>
                                 <th>Contact</th>
                                 <th>Members</th>
+                                <th>Email</th>
                                 <th>Trans ID</th>
                                 <th>Proof</th>
                                 <th>Status</th>
@@ -745,6 +746,7 @@
                     <td>${t.leader.name}</td>
                     <td>${t.leader.contact}</td>
                     <td>${memberDetails}</td>
+                    <td>${t.leader.email}</td>
                     <td style="font-family: monospace; color: #aaa;">${t.payment ? t.payment.transactionId : 'N/A'}</td>
                     <td>
                         ${hasProof ?
@@ -765,24 +767,25 @@
         }
 
         // --- Approval Logic ---
-        async function approveTeam(docId, teamName, email) {
-            const isConfirmed = await showConfirm(
-                `Confirm payment receipt for team "${teamName}"?`,
-                `This will update the database and prepare an approval email.`,
-                "APPROVE",
-                false // Not destructive
-            );
+        async function approveTeam(docId, teamName, email, category) {
+            const msg = category === 'PG'
+                ? `Confirm payment receipt for team "${teamName}"?`
+                : `Confirm mission clearance for team "${teamName}"?`;
+
+            const sub = category === 'PG'
+                ? `This will update the database and prepare an approval email.`
+                : `This will approve the Cadet team and send a confirmation email.`;
+
+            const isConfirmed = await showConfirm(msg, sub, "APPROVE", false);
 
             if (isConfirmed) {
-
                 const adminKey = sessionStorage.getItem('adminKey');
-
                 try {
                     const response = await fetch(`${BACKEND_URL}/api/registrations/${docId}/status`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
-                            'x-admin-key': adminKey // Send the Key
+                            'x-admin-key': adminKey
                         },
                         body: JSON.stringify({ status: 'Approved' })
                     });
@@ -791,15 +794,18 @@
 
                     // Open Mailto Link
                     const subject = encodeURIComponent("Mission Clearance Granted: Solve-A-Thon 1.0");
-                    const body = encodeURIComponent(`Greetings Team ${teamName},\n\nYour payment has been verified and your mission status is now APPROVED.\n\nGet ready for the launch sequence.\n\nRegards,\nMission Control\nAdmin Team`);
-                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+                    const bodyText = category === 'PG'
+                        ? `Greetings Team ${teamName},\n\nYour payment has been verified and your mission status is now APPROVED.\n\nGet ready for the launch sequence.\n\nRegards,\nMission Control\nAdmin Team`
+                        : `Greetings Team ${teamName},\n\nYour enlistment has been reviewed and your mission status is now APPROVED.\n\nGet ready for the launch sequence.\n\nRegards,\nMission Control\nAdmin Team`;
+
+                    window.location.href = `mailto:${email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
 
                     alert(`Access Granted to ${teamName}!`);
                     fetchData(); // Refresh list
 
                 } catch (error) {
-                    console.error("Error updating document: ", error);
-                    alert("Error updating status: " + error.message);
+                    console.error("Error updating: ", error);
+                    alert("Error: " + error.message);
                 }
             }
         }

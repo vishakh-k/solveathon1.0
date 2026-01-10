@@ -448,11 +448,17 @@
                 // PENDING STATE
                 icon.innerHTML = '<i class="fa-solid fa-hourglass-half fa-spin-pulse" style="color: orange; text-shadow: 0 0 20px orange;"></i>';
                 title.innerText = "AWAITING CLEARANCE";
-                details.innerHTML = `
-                    <p>Greetings, Team <strong>${data.team_name}</strong>.</p>
-                    <p>Your transaction is currently under verification by Mission Control.</p>
-                    <p style="font-size: 0.9em; margin-top: 10px; color: #aaa;">Please standby for Admin approval. This may take up to 24 hours.</p>
-                `;
+
+                let detailsHtml = `<p>Greetings, Team <strong>${data.team_name}</strong>.</p>`;
+                if (data.category === 'PG') {
+                    detailsHtml += `<p>Your transaction is currently under verification by Mission Control.</p>`;
+                } else {
+                    detailsHtml += `<p>Your enlistment request has been received and is under review.</p>`;
+                }
+                detailsHtml += `<p style="font-size: 0.9em; margin-top: 10px; color: #aaa;">Please standby for Admin approval.</p>`;
+
+                details.innerHTML = detailsHtml;
+
                 badge.innerText = "STATUS: PENDING";
                 badge.style.background = "rgba(255, 165, 0, 0.1)";
                 badge.style.color = "orange";
