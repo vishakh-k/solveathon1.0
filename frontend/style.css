@@ -1007,7 +1007,7 @@ model-viewer {
     color: var(--primary-color);
     font-family: var(--font-heading);
     margin-bottom: 0.5rem;
-    white-space: nowrap;
+    white-space: nowrap !important;
 }
 
 .team-card .role {
@@ -1565,7 +1565,7 @@ model-viewer {
     .query-grid,
     .footer-row,
     .team-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 
     /* Team grid removed from 2-col definition */
