@@ -698,26 +698,37 @@
         }
 
         // --- Render Tables ---
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function renderTables() {
             // UG Table
             const ugBody = document.getElementById('ug-table-body');
             ugBody.innerHTML = ugTeams.map(t => {
                 const memberDetails = t.members && t.members.length > 0
-                    ? t.members.map(m => `<div>${m.name} <span style="font-size:0.8em; color:#aaa;">(${m.contact})</span></div>`).join('')
+                    ? t.members.map(m => `<div>${escapeHtml(m.name)} <span style="font-size:0.8em; color:#aaa;">(${escapeHtml(m.contact)})</span></div>`).join('')
                     : '<span style="color:#555;">No Data</span>';
 
                 return `
                 <tr>
-                    <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
-                    <td>${t.college_name}</td>
-                    <td>${t.leader.name}</td>
-                    <td>${t.leader.contact}</td>
+                    <td style="font-weight: bold; color: #fff;">${escapeHtml(t.team_name)}</td>
+                    <td>${escapeHtml(t.college_name)}</td>
+                    <td>${escapeHtml(t.leader.name)}</td>
+                    <td>${escapeHtml(t.leader.contact)}</td>
                     <td>${memberDetails}</td>
-                    <td>${t.leader.email}</td>
+                    <td>${escapeHtml(t.leader.email)}</td>
                     <td>${t.dateStr}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${escapeHtml(t.team_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -736,18 +747,18 @@
                     : '';
 
                 const memberDetails = t.members && t.members.length > 0
-                    ? t.members.map(m => `<div>${m.name} <span style="font-size:0.8em; color:#aaa;">(${m.contact})</span></div>`).join('')
+                    ? t.members.map(m => `<div>${escapeHtml(m.name)} <span style="font-size:0.8em; color:#aaa;">(${escapeHtml(m.contact)})</span></div>`).join('')
                     : '<span style="color:#555;">No Data</span>';
 
                 return `
                 <tr>
-                    <td style="font-weight: bold; color: #fff;">${t.team_name}</td>
-                    <td>${t.college_name}</td>
-                    <td>${t.leader.name}</td>
-                    <td>${t.leader.contact}</td>
+                    <td style="font-weight: bold; color: #fff;">${escapeHtml(t.team_name)}</td>
+                    <td>${escapeHtml(t.college_name)}</td>
+                    <td>${escapeHtml(t.leader.name)}</td>
+                    <td>${escapeHtml(t.leader.contact)}</td>
                     <td>${memberDetails}</td>
-                    <td>${t.leader.email}</td>
-                    <td style="font-family: monospace; color: #aaa;">${t.payment ? t.payment.transactionId : 'N/A'}</td>
+                    <td>${escapeHtml(t.leader.email)}</td>
+                    <td style="font-family: monospace; color: #aaa;">${t.payment ? escapeHtml(t.payment.transactionId) : 'N/A'}</td>
                     <td>
                         ${hasProof ?
                         `<button class="action-btn btn-view" onclick="viewProof('${proofUrl}')"><i class="fa-regular fa-image"></i> View</button>` :
@@ -757,9 +768,9 @@
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             ${t.status === 'Pending' ?
-                        `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${t.team_name}', '${t.leader.email}')"><i class="fa-solid fa-check"></i> Approve</button>` :
+                        `<button class="action-btn btn-approve" onclick="approveTeam('${t.id}', '${escapeHtml(t.team_name).replace(/'/g, "\\'")}', '${escapeHtml(t.leader.email)}', 'PG')"><i class="fa-solid fa-check"></i> Approve</button>` :
                         '<span style="color:#aaa; display:inline-block;"><i class="fa-solid fa-check-double"></i> Verified</span>'}
-                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${t.team_name}')"><i class="fa-solid fa-trash"></i></button>
+                            <button class="action-btn btn-delete" onclick="deleteTeam('${t.id}', '${escapeHtml(t.team_name).replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>

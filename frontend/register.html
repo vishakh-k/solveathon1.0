@@ -428,13 +428,15 @@
 
             if (data.status === 'Approved') {
                 // APPROVED STATE
+                const degreeType = data.category === 'UG' ? 'BCA / BSc' : 'MCA / MSc / Engineering';
+
                 icon.innerHTML = '<i class="fa-solid fa-medal" style="color: #0f0; text-shadow: 0 0 20px #0f0;"></i>';
                 title.innerText = "MISSION GRANTED";
                 details.innerHTML = `
                     <p>Welcome back, Team <strong>${data.team_name}</strong>.</p>
                     <p>Your squad is fully authorized for launch.</p>
                     <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                        <p style="color: var(--primary-color);">Category: ${data.category}</p>
+                        <p style="color: var(--primary-color);">Category: ${degreeType}</p>
                         <p style="font-size: 0.9em; opacity: 0.8;">Leader: ${data.leader.name}</p>
                     </div>
                 `;
