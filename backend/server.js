@@ -203,6 +203,16 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             return res.status(400).json({ message: 'User ID is required' });
         }
 
+        // Check for existing active registration
+        const existingUser = await User.findById(user_id);
+        if (existingUser && existingUser.is_registered_for_event) {
+            // Optional: Check if they actually have a registration doc
+            const existingReg = await Registration.findOne({ user_id });
+            if (existingReg) {
+                return res.status(400).json({ message: 'User already has an active mission enlistment.' });
+            }
+        }
+
         const members = [
             { name: member2_name, contact: member2_contact, email: member2_email },
             { name: member3_name, contact: member3_contact, email: member3_email },
@@ -244,7 +254,8 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
 // Get Registration by User ID
 app.get('/api/user/:userId/registration', async (req, res) => {
     try {
-        const registration = await Registration.findOne({ user_id: req.params.userId });
+        // Fetch the LATEST registration for this user
+        const registration = await Registration.findOne({ user_id: req.params.userId }).sort({ registeredAt: -1 });
         if (!registration) {
             return res.status(404).json({ message: 'Registration not found' });
         }
