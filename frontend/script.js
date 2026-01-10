@@ -117,16 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Divider Jet Animation (Passing Jet)
     const jetDivider = document.querySelector('.divider-jet');
     if (jetDivider) {
-        gsap.fromTo(jetDivider,
-            { x: '-20vw' },
-            {
-                x: '120vw',
-                duration: 1.5,
-                ease: "none",
-                repeat: -1,
-                repeatDelay: 5 // Jet passes every 5 seconds
-            }
-        );
+        const patrolTl = gsap.timeline({ repeat: -1 });
+        patrolTl
+            .set(jetDivider, { rotation: 90 }) // Ensure facing right
+            .fromTo(jetDivider, { x: '-20vw' }, { x: '120vw', duration: 2, ease: "power1.inOut" })
+            .set(jetDivider, { rotation: -90 }) // Flip to face left
+            .to(jetDivider, { x: '-20vw', duration: 2, ease: "power1.inOut" });
     }
 
     // Apply fade-in animation logic to glass-panels if needed, 
