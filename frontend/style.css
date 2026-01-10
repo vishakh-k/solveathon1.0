@@ -1571,6 +1571,22 @@ model-viewer {
         gap: 1rem;
     }
 
+    .team-card {
+        padding: 0.8rem !important;
+        /* Force tighter padding for mobile grid */
+    }
+
+    .team-card h3 {
+        font-size: 0.95rem;
+        margin-bottom: 0.2rem;
+        word-wrap: break-word;
+        /* Ensure valid wrap */
+        line-height: 1.3;
+    }
+
+    .team-card p {
+        font-size: 0.8rem;
+    }
 
     .rewards-card h3 {
         font-size: 2rem;
