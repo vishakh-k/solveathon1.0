@@ -142,6 +142,8 @@
                             <div class="input-group">
                                 <label>Team Name</label>
                                 <input type="text" name="team_name" placeholder="Enter Team Name" required>
+                                <small id="team-name-feedback" class="input-feedback"
+                                    style="display: block; margin-top: 5px; font-size: 0.8rem; height: 1.2em;"></small>
                             </div>
                         </div>
                     </div>
@@ -398,7 +400,55 @@
 
             // Check if User is already registered
             checkRegistrationStatus();
+
+            // Setup Real-time Validation
+            setupTeamNameValidation();
         });
+
+        function setupTeamNameValidation() {
+            const teamInput = document.querySelector('input[name="team_name"]');
+            const feedback = document.getElementById('team-name-feedback');
+            let timeout = null;
+
+            if (!teamInput || !feedback) return;
+
+            teamInput.addEventListener('input', () => {
+                const name = teamInput.value.trim();
+
+                // Clear previous timeout
+                clearTimeout(timeout);
+
+                // Reset feedback
+                feedback.innerText = '';
+                feedback.style.color = '';
+                teamInput.style.borderColor = '';
+
+                if (name.length < 3) return;
+
+                // Debounce
+                timeout = setTimeout(async () => {
+                    feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking availability...';
+                    feedback.style.color = '#aaa';
+
+                    try {
+                        const response = await fetch(`${API_CONFIG.BASE_URL}/api/check-team-availability/${encodeURIComponent(name)}`);
+                        const result = await response.json();
+
+                        if (result.available) {
+                            feedback.innerHTML = '<i class="fa-solid fa-check"></i> Squadron Name Available';
+                            feedback.style.color = '#0f0';
+                            teamInput.style.borderColor = '#0f0';
+                        } else {
+                            feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Squadron Name Taken';
+                            feedback.style.color = '#ff4444';
+                            teamInput.style.borderColor = '#ff4444';
+                        }
+                    } catch (err) {
+                        console.error("Check failed", err);
+                    }
+                }, 500);
+            });
+        }
 
         async function checkRegistrationStatus() {
             try {

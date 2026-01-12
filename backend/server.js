@@ -213,6 +213,13 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             }
         }
 
+        // Check for duplicate Team Name (Case Insensitive)
+        const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const teamExists = await Registration.findOne({ team_name: { $regex: new RegExp(`^${escapeRegex(team_name)}$`, 'i') } });
+        if (teamExists) {
+            return res.status(400).json({ message: 'This Squadron Name (Team Name) is already taken. Please choose a unique identifier.' });
+        }
+
         const members = [
             { name: member2_name, contact: member2_contact, email: member2_email },
             { name: member3_name, contact: member3_contact, email: member3_email },
@@ -262,6 +269,19 @@ app.get('/api/user/:userId/registration', async (req, res) => {
         res.json(registration);
     } catch (err) {
         console.error("Fetch Registration Error:", err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// Check Team Name Availability
+app.get('/api/check-team-availability/:name', async (req, res) => {
+    try {
+        const teamName = req.params.name;
+        const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const exists = await Registration.findOne({ team_name: { $regex: new RegExp(`^${escapeRegex(teamName)}$`, 'i') } });
+        res.json({ available: !exists });
+    } catch (err) {
+        console.error("Availability Check Error:", err);
         res.status(500).json({ message: 'Server Error' });
     }
 });
