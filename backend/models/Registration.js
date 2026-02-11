@@ -15,6 +15,10 @@ const RegistrationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    department: {
+        type: String,
+        required: true
+    },
     team_name: {
         type: String,
         required: true

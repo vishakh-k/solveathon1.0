@@ -191,6 +191,7 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             user_id,
             category,
             college_name,
+            department,
             team_name,
             leader_name, leader_contact, leader_email,
             member2_name, member2_contact, member2_email,
@@ -230,6 +231,7 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             user_id,
             category,
             college_name,
+            department,
             team_name,
             leader: {
                 name: leader_name,

@@ -134,10 +134,29 @@
                     <!-- Team Intel -->
                     <div class="form-section">
                         <h4><i class="fa-solid fa-users-viewfinder"></i> Squadron Details</h4>
-                        <div class="grid-2">
+                        <div class="grid-3" id="squadron-grid">
                             <div class="input-group">
                                 <label>College Name</label>
                                 <input type="text" name="college_name" placeholder="Enter College Name" required>
+                            </div>
+                            <div class="input-group" id="dept-group">
+                                <label>Department</label>
+                                <select id="dept-select" required onchange="toggleOtherDept(this)"
+                                    style="width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 5px;">
+                                    <option value="" disabled selected style="background: #000;">Select Branch</option>
+                                    <option value="MCA" style="background: #000;">MCA</option>
+                                    <option value="MSc" style="background: #000;">MSc</option>
+                                    <option value="CS" style="background: #000;">Computer Science (CS)</option>
+                                    <option value="AIML" style="background: #000;">AI & ML (AIML)</option>
+                                    <option value="DS" style="background: #000;">Data Science (DS)</option>
+                                    <option value="AIDS" style="background: #000;">AI & DS (AIDS)</option>
+                                    <option value="CSBS" style="background: #000;">CS Business Sys. (CSBS)</option>
+                                    <option value="EC" style="background: #000;">Electronics (EC)</option>
+                                    <option value="IS" style="background: #000;">Info. Science (IS)</option>
+                                    <option value="Other" style="background: #000;">Other</option>
+                                </select>
+                                <input type="text" id="dept-other" placeholder="Enter Department"
+                                    style="display: none; margin-top: 5px;">
                             </div>
                             <div class="input-group">
                                 <label>Team Name</label>
@@ -450,6 +469,18 @@
             });
         }
 
+        function toggleOtherDept(select) {
+            const otherInput = document.getElementById('dept-other');
+            if (select.value === 'Other') {
+                otherInput.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+        }
+
         async function checkRegistrationStatus() {
             try {
                 const response = await fetch(`${API_CONFIG.BASE_URL}/api/user/${user.id}/registration`);
@@ -602,11 +633,21 @@
                 paymentSection.classList.remove('hidden');
                 // Make payment fields required
                 paymentInputs.forEach(input => input.setAttribute('required', 'true'));
+
+                // Show Department for PG
+                document.getElementById('dept-group').style.display = 'block';
+                document.getElementById('dept-select').setAttribute('required', 'true');
+                document.getElementById('squadron-grid').classList.replace('grid-2', 'grid-3');
             } else {
                 formTitle.innerHTML = '<i class="fa-brands fa-space-awesome"></i> Cadet Enlistment (BCA/BSc)';
                 paymentSection.classList.add('hidden');
                 // Remove required from hidden fields
                 paymentInputs.forEach(input => input.removeAttribute('required'));
+
+                // Hide Department for UG
+                document.getElementById('dept-group').style.display = 'none';
+                document.getElementById('dept-select').removeAttribute('required');
+                document.getElementById('squadron-grid').classList.replace('grid-3', 'grid-2');
             }
 
             // Animation
@@ -662,11 +703,25 @@
             try {
                 // Collect Form Data
                 const formData = new FormData(missionForm);
+                const category = formData.get('category');
+
+                // Handle Department (Only for PG)
+                const deptSelect = document.getElementById('dept-select');
+                const deptOther = document.getElementById('dept-other');
+
+                if (category === 'PG') {
+                    let finalDept = deptSelect.value;
+                    if (finalDept === 'Other') {
+                        finalDept = deptOther.value.trim();
+                        if (!finalDept) throw new Error("Please specify your Department");
+                    }
+                    formData.set('department', finalDept);
+                } else {
+                    formData.set('department', 'N/A'); // Default for UG
+                }
 
                 // Append User ID
                 formData.append('user_id', user.id);
-
-                const category = formData.get('category');
 
                 // Send to Backend
                 const response = await fetch(`${API_CONFIG.BASE_URL}/api/register`, {

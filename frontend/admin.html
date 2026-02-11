@@ -458,6 +458,7 @@
                             <tr>
                                 <th>Team Name</th>
                                 <th>College</th>
+                                <th>Department</th>
                                 <th>Leader</th>
                                 <th>Contact</th>
                                 <th>Members</th>
@@ -497,6 +498,7 @@
                             <tr>
                                 <th>Team Name</th>
                                 <th>College</th>
+                                <th>Department</th>
                                 <th>Leader</th>
                                 <th>Contact</th>
                                 <th>Members</th>
@@ -721,6 +723,7 @@
                 <tr>
                     <td style="font-weight: bold; color: #fff;">${escapeHtml(t.team_name)}</td>
                     <td>${escapeHtml(t.college_name)}</td>
+                    <td>${escapeHtml(t.department || 'N/A')}</td>
                     <td>${escapeHtml(t.leader.name)}</td>
                     <td>${escapeHtml(t.leader.contact)}</td>
                     <td>${memberDetails}</td>
@@ -754,6 +757,7 @@
                 <tr>
                     <td style="font-weight: bold; color: #fff;">${escapeHtml(t.team_name)}</td>
                     <td>${escapeHtml(t.college_name)}</td>
+                    <td>${escapeHtml(t.department || 'N/A')}</td>
                     <td>${escapeHtml(t.leader.name)}</td>
                     <td>${escapeHtml(t.leader.contact)}</td>
                     <td>${memberDetails}</td>
