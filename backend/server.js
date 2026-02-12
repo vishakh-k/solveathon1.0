@@ -68,7 +68,10 @@ if (hasCloudinaryKeys) {
     });
 }
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB Limit
+});
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/solveathon')
@@ -335,6 +338,23 @@ app.delete('/api/registrations/:id', requireAdmin, async (req, res) => {
 // Debug Routes
 app.get('/', (req, res) => {
     res.send('API is Running');
+});
+
+// Handle 404 for API routes
+app.use('/api', (req, res) => {
+    res.status(404).json({ success: false, message: 'API Endpoint Not Found' });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Global Error Handler:", err);
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({ success: false, message: 'File Upload Error: ' + err.message });
+    }
+    res.status(500).json({
+        success: false,
+        message: 'Server Error: ' + (err.message || 'Unknown Error')
+    });
 });
 
 app.listen(PORT, () => {
