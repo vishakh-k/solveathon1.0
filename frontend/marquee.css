@@ -1,0 +1,51 @@
+/* Marquee Styles */
+.marquee-container {
+    width: 100%;
+    background: linear-gradient(90deg, #8B0000, #FF0000, #8B0000);
+    color: #fff;
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 900;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 80px;
+    /* Clear fixed navbar */
+    margin-bottom: -60px;
+    /* Pull content back up slightly if needed */
+}
+
+.marquee-content {
+    display: flex;
+    width: fit-content;
+    animation: scrollNav 20s linear infinite;
+}
+
+.marquee-item {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    padding-right: 5rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+@keyframes scrollNav {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Pause on hover */
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
+}
