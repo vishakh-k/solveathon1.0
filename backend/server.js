@@ -103,6 +103,10 @@ app.post('/api/auth/signup', async (req, res) => {
         console.log('Signup Request Body:', req.body);
         const { team_name, college_name, leader_name, email, password, category } = req.body;
 
+        if (category === 'PG') {
+            return res.status(400).json({ success: false, message: "Registration for Commander League (PG) is closed." });
+        }
+
         // Check user
         const exists = await User.findOne({ email });
         if (exists) return res.status(400).json({ success: false, message: "Email already registered" });
@@ -202,6 +206,11 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             member4_name, member4_contact, member4_email,
             transaction_id
         } = req.body;
+
+        // Block PG Registration
+        if (category === 'PG') {
+            return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity.' });
+        }
 
         if (!user_id) {
             return res.status(400).json({ message: 'User ID is required' });
