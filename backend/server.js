@@ -106,6 +106,9 @@ app.post('/api/auth/signup', async (req, res) => {
         if (category === 'PG') {
             return res.status(400).json({ success: false, message: "Registration for Commander League (PG) is closed." });
         }
+        if (category === 'UG') {
+            return res.status(400).json({ success: false, message: "Registration for Cadet League (UG) is closed due to full capacity." });
+        }
 
         // Check user
         const exists = await User.findOne({ email });
@@ -210,6 +213,10 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
         // Block PG Registration
         if (category === 'PG') {
             return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity.' });
+        }
+        // Block UG Registration
+        if (category === 'UG') {
+            return res.status(400).json({ message: 'Registration for Cadet League (UG) is closed due to full capacity.' });
         }
 
         if (!user_id) {
