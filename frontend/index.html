@@ -510,7 +510,33 @@
         </div>
     </footer>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Dynamic Marquee Update for Slots
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
+                const data = await response.json();
+
+                const remaining = Math.max(0, data.pg_limit - data.pg_count);
+                const marqueeItems = document.querySelectorAll('.marquee-item');
+
+                marqueeItems.forEach(item => {
+                    if (item.innerText.includes('ONLY 10 SLOTS REMAINING')) {
+                        if (remaining > 0) {
+                            item.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ATTENTION: ONLY ${remaining} SLOTS REMAINING FOR COMMANDER LEAGUE (PG) - ACT FAST!`;
+                        } else {
+                            item.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ATTENTION: COMMANDER LEAGUE (PG) REGISTRATION CLOSED - SLOTS FULL!`;
+                            item.style.color = '#ff4444';
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to fetch slots for marquee", error);
+            }
+        });
+    </script>
 </body>
 
 </html>

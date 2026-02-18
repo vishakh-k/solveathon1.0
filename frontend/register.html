@@ -784,6 +784,8 @@
                 const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
                 const data = await response.json();
 
+                const remaining = data.pg_limit - data.pg_count;
+
                 // Check PG
                 if (data.pg_count >= data.pg_limit) {
                     // Close PG
@@ -807,6 +809,15 @@
                             btn.style.cursor = 'not-allowed';
                             btn.innerText = "Registration Closed";
                             btn.setAttribute('onclick', "alert('Registration Closed for Commander League due to full capacity.')");
+                        }
+                    }
+                } else if (remaining > 0) {
+                    // Update Display with Remaining Count
+                    const pgCard = document.getElementById('pg-card');
+                    if (pgCard) {
+                        const priceTag = pgCard.querySelector('.price-tag-sm span');
+                        if (priceTag && !priceTag.innerText.includes('Remaining')) {
+                            priceTag.innerText = `₹500 / Team (${remaining} Left)`;
                         }
                     }
                 }
