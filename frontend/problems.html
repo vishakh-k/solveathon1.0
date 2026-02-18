@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Statements - Solve-A-Thon 1.0</title>
+    <meta name="description" content="View problem statements for Solve-A-Thon 1.0.">
+    <!-- Font and Style Links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="elements/favicon.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* Specific Styles for Problem Page */
+        body {
+            background-color: #050510;
+        }
+
+        #track-selection {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 100px;
+            /* Space for navbar */
+        }
+
+        .track-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 3rem;
+        }
+
+        .track-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .track-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .track-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .track-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .track-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .active-track {
+            border-color: var(--primary-color);
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Problem List Styles (Hidden Initially) */
+        .problem-list {
+            display: none;
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Simple Loader -->
+    <div id="loader" class="page-loader">
+        <div class="jet-container">
+            <img src="elements/loading_jet.png" alt="Loading" class="loading-jet-img-sm">
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" class="logo-text">
+                SOLVEATHON 1.0 <i class="fa-solid fa-jet-fighter-up"></i>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <!-- New Problems Link -->
+            <li><a href="problems.html" class="active-page" style="color: var(--primary-color);">Problem Statements</a>
+            </li>
+            <li><a href="index.html#events">Events</a></li>
+            <li><a href="user_login.html">Login</a></li>
+            <li><a href="user_register.html" class="nav-btn">Join Mission</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <section id="track-selection">
+        <div class="container">
+            <h2 class="section-title">Mission Objectives</h2>
+            <p class="subtitle" style="font-size: 1.2rem; letter-spacing: 3px; color: var(--secondary-color);">Select
+                Your Track</p>
+
+            <!-- Navbar-style Track Selection -->
+            <!-- Dropdown-style Track Selection -->
+            <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
+                <select id="track-select" onchange="selectTrack(this.value)" style="
+                    width: 100%;
+                    padding: 15px 20px;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(10px);
+                    color: #fff;
+                    border: 1px solid var(--primary-color);
+                    border-radius: 50px;
+                    font-family: var(--font-heading);
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    appearance: none;
+                    -webkit-appearance: none;
+                    outline: none;
+                    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+                    transition: 0.3s;
+                ">
+                    <option value="" disabled selected>Select Your Track</option>
+                    <option value="UG" style="background: #000;">Cadet League (BCA/BSc)</option>
+                    <option value="PG" style="background: #000;">Commander League (MCA/Msc/BE)</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="
+                    position: absolute;
+                    right: 20px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--primary-color);
+                    pointer-events: none;
+                "></i>
+            </div>
+
+            <!-- Placeholder for Problem Statements Content -->
+            <div id="problems-container" class="problem-list glass-panel">
+                <h3 id="selected-track-title"
+                    style="color: var(--primary-color); font-family: var(--font-heading); margin-bottom: 2rem;"></h3>
+                <div style="padding: 2rem; border: 1px dashed rgba(255,255,255,0.2); border-radius: 10px;">
+                    <p style="color: #ccc; font-size: 1.2rem;">Decrypting Mission Files... Problem Statements will be
+                        revealed here.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Background Elements -->
+        <div class="hero-background">
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Solve-A-Thon 1.0 | Department of MCA, SIT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
+            }
+
+            // Animation for new buttons
+            gsap.from(".glass-panel button", {
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "power2.out",
+                delay: 0.2
+            });
+        });
+
+        // Hamburger
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        function selectTrack(track) {
+            const container = document.getElementById('problems-container');
+            const title = document.getElementById('selected-track-title');
+
+            if (!track) return;
+
+            container.style.display = 'block';
+            title.innerText = track === 'UG' ? "Cadet League Problem Statements (BCA/BSc)" : "Commander League Problem Statements (MCA/Msc/BE)";
+
+        }
+
+
+    </script>
+</body>
+
+</html>
