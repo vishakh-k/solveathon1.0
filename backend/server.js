@@ -206,8 +206,8 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
         // Slot Check for PG
         if (category === 'PG') {
             const pgCount = await Registration.countDocuments({ category: 'PG' });
-            if (pgCount >= 20) {
-                return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity (Max 20 Slots).' });
+            if (pgCount >= 30) {
+                return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity (Max 30 Slots).' });
             }
         }
 
@@ -303,7 +303,7 @@ app.get('/api/check-team-availability/:name', async (req, res) => {
 app.get('/api/slots', async (req, res) => {
     try {
         const pgCount = await Registration.countDocuments({ category: 'PG' });
-        res.json({ pg_count: pgCount, pg_limit: 20 });
+        res.json({ pg_count: pgCount, pg_limit: 30 });
     } catch (err) {
         console.error("Slot Check Error:", err);
         res.status(500).json({ message: 'Server Error' });
