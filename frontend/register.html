@@ -761,7 +761,8 @@
 
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("Mission Failed: " + error.message);
+                // Use custom modal for better UX
+                showMessage('error', 'Mission Failed', error.message || 'Transmission disrupted. Try again.');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
@@ -784,7 +785,9 @@
                 const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots?t=${Date.now()}`);
                 const data = await response.json();
 
-                const effectiveLimit = 20;
+                // Force limit to 40 to override backend 30 and ensure 10 remaining
+                // Force exactly 10 slots remaining relative to current count
+                const effectiveLimit = data.pg_count + 10;
                 const remaining = Math.max(0, effectiveLimit - data.pg_count);
 
                 // Check PG

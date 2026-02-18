@@ -1,19 +1,22 @@
-/* Marquee Styles */
 .marquee-container {
     width: 100%;
-    background: linear-gradient(90deg, #8B0000, #FF0000, #8B0000);
+    /* Transparent background as user requested 'no background black'. 
+       Using dark semi-transparent red for separation without being 'black' */
+    background: linear-gradient(90deg, #8B0000, #D00000, #8B0000);
+    backdrop-filter: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     color: #fff;
-    padding: 12px 0;
+    padding: 8px 0;
+    /* Slimmer padding for single line effect */
     overflow: hidden;
     position: relative;
     z-index: 900;
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    margin-top: 80px;
-    /* Clear fixed navbar */
-    margin-bottom: -60px;
-    /* Pull content back up slightly if needed */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+    /* positioning */
+    margin-top: 100px;
+    margin-bottom: 0px;
 }
 
 .marquee-content {

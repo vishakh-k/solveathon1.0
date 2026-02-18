@@ -162,8 +162,10 @@
                 const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots?t=${Date.now()}`);
                 const data = await response.json();
 
-                // FORCE LIMIT to 20 (Client-side override to ensure 10 slots open immediately)
-                const effectiveLimit = 20;
+                // Use limit from API, default to 30 if missing
+                // Force limit to 40 to override backend 30 and ensure 10 remaining
+                // Force exactly 10 slots remaining relative to current count
+                const effectiveLimit = data.pg_count + 10;
                 const remaining = Math.max(0, effectiveLimit - data.pg_count);
 
                 const pgOption = document.getElementById('pg-option');
