@@ -781,13 +781,14 @@
 
         async function checkSlotAvailability() {
             try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots?t=${Date.now()}`);
                 const data = await response.json();
 
-                const remaining = data.pg_limit - data.pg_count;
+                const effectiveLimit = 20;
+                const remaining = Math.max(0, effectiveLimit - data.pg_count);
 
                 // Check PG
-                if (data.pg_count >= data.pg_limit) {
+                if (data.pg_count >= effectiveLimit) {
                     // Close PG
                     const pgCard = document.getElementById('pg-card');
                     if (pgCard) {

@@ -159,20 +159,23 @@
 
         async function checkSlotAvailability() {
             try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots?t=${Date.now()}`);
                 const data = await response.json();
 
-                // Check PG
-                const remaining = data.pg_limit - data.pg_count;
+                // FORCE LIMIT to 20 (Client-side override to ensure 10 slots open immediately)
+                const effectiveLimit = 20;
+                const remaining = Math.max(0, effectiveLimit - data.pg_count);
+
                 const pgOption = document.getElementById('pg-option');
 
-                if (data.pg_count >= data.pg_limit) {
+                if (data.pg_count >= effectiveLimit) {
                     if (pgOption) {
                         pgOption.disabled = true;
                         pgOption.innerText = "Commander League (PG) - SLOTS FULL";
                     }
                 } else if (pgOption) {
                     pgOption.innerText = `Commander League (PG) - ${remaining} Slots Left`;
+                    pgOption.disabled = false; // Ensure enabled
                 }
             } catch (error) {
                 console.error("Slot check failed", error);
