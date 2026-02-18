@@ -65,13 +65,13 @@
 
                     <div class="input-group">
                         <label>Category</label>
-                        <select name="category"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; color: #fff; width: 100%; border-radius: 5px;">
-                            <option value="" disabled selected>Registrations Closed</option>
-                            <option value="UG" style="background: #000;" disabled>Cadet League (BCA/BSc) - Slots Full
+                        <select name="category" id="category-select"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; color: #fff; width: 100%; border-radius: 5px;"
+                            required>
+                            <option value="" disabled selected style="background: #000;">Select Category</option>
+                            <option value="UG" style="background: #000;">Cadet League (BCA/BSc)</option>
+                            <option value="PG" style="background: #000;" id="pg-option">Commander League (MCA/MSc/BE)
                             </option>
-                            <option value="PG" style="background: #000;" disabled>Commander League (MCA/MSc/BE) - Slots
-                                Full</option>
                         </select>
                     </div>
 
@@ -152,7 +152,28 @@
             }
             // Setup Real-time Validation
             setupTeamNameValidation();
+
+            // Check Slots
+            checkSlotAvailability();
         });
+
+        async function checkSlotAvailability() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
+                const data = await response.json();
+
+                // Check PG
+                if (data.pg_count >= data.pg_limit) {
+                    const pgOption = document.getElementById('pg-option');
+                    if (pgOption) {
+                        pgOption.disabled = true;
+                        pgOption.innerText = "Commander League (PG) - SLOTS FULL";
+                    }
+                }
+            } catch (error) {
+                console.error("Slot check failed", error);
+            }
+        }
 
         function setupTeamNameValidation() {
             const teamInput = document.querySelector('input[name="team_name"]');

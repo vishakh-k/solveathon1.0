@@ -80,44 +80,44 @@
             <div class="registration-grid" id="registration-options">
 
                 <!-- UG Card -->
-                <div class="reg-card glass-panel" id="ug-card" style="opacity: 0.6; filter: grayscale(0.8);">
+                <div class="reg-card glass-panel" id="ug-card">
                     <div class="card-icon">
                         <i class="fa-brands fa-space-awesome"></i>
                     </div>
                     <h3>Cadet League</h3>
                     <h4>BCA / BSc Students</h4>
-                    <div class="price-tag-sm" style="background: #ff4444;">
-                        <span>SLOTS FULL</span>
+                    <div class="price-tag-sm"
+                        style="background: rgba(0, 255, 0, 0.2); color: #0f0; border: 1px solid #0f0;">
+                        <span>OPEN</span>
                     </div>
                     <ul class="reg-features">
                         <li><i class="fa-solid fa-check"></i> Standard Hardware Access</li>
                         <li><i class="fa-solid fa-check"></i> 24H Hackathon Access</li>
                         <li><i class="fa-solid fa-check"></i> Cash Pool Rewards</li>
                     </ul>
-                    <button class="btn primary-btn full-width-btn" style="background: #333; cursor: not-allowed;"
-                        onclick="alert('Registration Closed for Cadet League')">
-                        Registration Closed
+                    <button class="btn primary-btn full-width-btn" onclick="showForm('UG')">
+                        Initialize Protocol
                     </button>
                 </div>
 
                 <!-- PG/Eng Card -->
-                <div class="reg-card glass-panel" id="pg-card" style="opacity: 0.6; filter: grayscale(0.8);">
+                <div class="reg-card glass-panel" id="pg-card">
                     <div class="card-icon">
                         <i class="fa-solid fa-rocket"></i>
                     </div>
                     <h3>Commander League</h3>
                     <h4>MCA / MSc / BE Students</h4>
-                    <div class="price-tag-sm" style="background: #ff4444;">
-                        <span>SLOTS FULL</span>
+                    <div class="price-tag-sm"
+                        style="background: rgba(0, 243, 255, 0.2); color: #00f3ff; border: 1px solid #00f3ff;">
+                        <span>₹500 / Team</span>
                     </div>
                     <ul class="reg-features">
                         <li><i class="fa-solid fa-check"></i> Premium Resource Allocation</li>
                         <li><i class="fa-solid fa-check"></i> Industry Mentorship</li>
                         <li><i class="fa-solid fa-check"></i> Cash Pool Rewards</li>
                     </ul>
-                    <button class="btn primary-btn full-width-btn" style="background: #333; cursor: not-allowed;"
-                        onclick="alert('Registration Closed for Commander League')">
-                        Registration Closed
+                    <button class="btn primary-btn full-width-btn" onclick="showForm('PG')">
+                        Initialize Protocol
                     </button>
                 </div>
 
@@ -424,6 +424,9 @@
 
             // Setup Real-time Validation
             setupTeamNameValidation();
+
+            // Check Slot Availability
+            checkSlotAvailability();
         });
 
         function setupTeamNameValidation() {
@@ -774,6 +777,42 @@
                 hamburger.classList.toggle('active');
                 navLinks.classList.toggle('active');
             });
+        }
+
+        async function checkSlotAvailability() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots`);
+                const data = await response.json();
+
+                // Check PG
+                if (data.pg_count >= data.pg_limit) {
+                    // Close PG
+                    const pgCard = document.getElementById('pg-card');
+                    if (pgCard) {
+                        pgCard.style.opacity = '0.6';
+                        pgCard.style.filter = 'grayscale(0.8)';
+
+                        const priceTag = pgCard.querySelector('.price-tag-sm span');
+                        if (priceTag) {
+                            priceTag.innerText = "SLOTS FULL";
+                            priceTag.parentElement.style.background = '#ff4444';
+                            priceTag.parentElement.style.borderColor = '#ff4444';
+                            priceTag.parentElement.style.color = '#fff';
+                        }
+
+                        const btn = pgCard.querySelector('button');
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.style.background = '#333';
+                            btn.style.cursor = 'not-allowed';
+                            btn.innerText = "Registration Closed";
+                            btn.setAttribute('onclick', "alert('Registration Closed for Commander League due to full capacity.')");
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Slot check failed", error);
+            }
         }
     </script>
 </body>

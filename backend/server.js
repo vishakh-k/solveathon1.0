@@ -103,13 +103,6 @@ app.post('/api/auth/signup', async (req, res) => {
         console.log('Signup Request Body:', req.body);
         const { team_name, college_name, leader_name, email, password, category } = req.body;
 
-        if (category === 'PG') {
-            return res.status(400).json({ success: false, message: "Registration for Commander League (PG) is closed." });
-        }
-        if (category === 'UG') {
-            return res.status(400).json({ success: false, message: "Registration for Cadet League (UG) is closed due to full capacity." });
-        }
-
         // Check user
         const exists = await User.findOne({ email });
         if (exists) return res.status(400).json({ success: false, message: "Email already registered" });
@@ -210,13 +203,12 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             transaction_id
         } = req.body;
 
-        // Block PG Registration
+        // Slot Check for PG
         if (category === 'PG') {
-            return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity.' });
-        }
-        // Block UG Registration
-        if (category === 'UG') {
-            return res.status(400).json({ message: 'Registration for Cadet League (UG) is closed due to full capacity.' });
+            const pgCount = await Registration.countDocuments({ category: 'PG' });
+            if (pgCount >= 10) {
+                return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity (Max 10 Slots).' });
+            }
         }
 
         if (!user_id) {
@@ -303,6 +295,17 @@ app.get('/api/check-team-availability/:name', async (req, res) => {
         res.json({ available: !exists });
     } catch (err) {
         console.error("Availability Check Error:", err);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// Check Slot Status
+app.get('/api/slots', async (req, res) => {
+    try {
+        const pgCount = await Registration.countDocuments({ category: 'PG' });
+        res.json({ pg_count: pgCount, pg_limit: 10 });
+    } catch (err) {
+        console.error("Slot Check Error:", err);
         res.status(500).json({ message: 'Server Error' });
     }
 });
