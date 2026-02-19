@@ -61,58 +61,25 @@
                     <h3><i class="fa-solid fa-user-plus"></i> New Account</h3>
                 </div>
 
-                <form id="signupForm">
+                <div class="form-header" style="justify-content: center;">
+                    <h3><i class="fa-solid fa-lock"></i> Mission Status</h3>
+                </div>
 
-                    <div class="input-group">
-                        <label>Category</label>
-                        <select name="category" id="category-select"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 12px; color: #fff; width: 100%; border-radius: 5px;"
-                            required>
-                            <option value="" disabled selected style="background: #000;">Select Category</option>
-                            <option value="UG" style="background: #000;">Cadet League (BCA/BSc)</option>
-                            <option value="PG" style="background: #000;" id="pg-option">Commander League (MCA/MSc/BE)
-                            </option>
-                        </select>
-                    </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fa-solid fa-ban"
+                        style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <h2 style="color: #fff; margin-bottom: 0.5rem;">REGISTRATIONS CLOSED</h2>
+                    <p style="color: #ccc;">The enlistment window for Solve-A-Thon 1.0 has closed for both Cadet (UG)
+                        and Commander (PG) Leagues.</p>
+                    <p style="color: var(--primary-color); margin-top: 1rem; font-weight: bold;">Mission Launch
+                        Imminent.</p>
+                </div>
 
-                    <div class="input-group">
-                        <label>College Name</label>
-                        <input type="text" name="college_name" placeholder="Enter College Name" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Team Name</label>
-                        <input type="text" name="team_name" placeholder="Enter Team Name" required>
-                        <small id="team-name-feedback" class="input-feedback"
-                            style="display: block; margin-top: 5px; font-size: 0.8rem; height: 1.2em;"></small>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Team Leader Name</label>
-                        <input type="text" name="leader_name" placeholder="Full Name" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Email ID</label>
-                        <input type="email" name="email" placeholder="email@example.com" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" name="password" placeholder="Create Password" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn primary-btn glow-effect" style="width: 100%;">Create
-                            Account</button>
-                    </div>
-
-                    <p style="text-align: center; margin-top: 1.5rem; color: #aaa;">
-                        Already have an account? <a href="user_login.html" style="color: var(--primary-color);">Login
-                            here</a>
-                    </p>
-
-                </form>
+                <div class="form-actions" style="margin-top: 1rem;">
+                    <a href="index.html" class="btn primary-btn glow-effect"
+                        style="width: 100%; text-align: center; text-decoration: none; display: block;">Return to
+                        Base</a>
+                </div>
             </div>
 
         </div>
@@ -150,87 +117,7 @@
             if (loader) {
                 gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
             }
-            // Setup Real-time Validation
-            setupTeamNameValidation();
-
-            // Check Slots
-            checkSlotAvailability();
         });
-
-        async function checkSlotAvailability() {
-            try {
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/slots?t=${Date.now()}`);
-                const data = await response.json();
-
-                // Use limit from API, default to 30 if missing
-                // Force limit to 40 to override backend 30 and ensure 10 remaining
-                // Force exactly 10 slots remaining relative to current count
-                const effectiveLimit = data.pg_count + 10;
-                const remaining = Math.max(0, effectiveLimit - data.pg_count);
-
-                const pgOption = document.getElementById('pg-option');
-
-                if (data.pg_count >= effectiveLimit) {
-                    if (pgOption) {
-                        pgOption.disabled = true;
-                        pgOption.innerText = "Commander League (PG) - SLOTS FULL";
-                    }
-                } else if (pgOption) {
-                    pgOption.innerText = `Commander League (PG) - ${remaining} Slots Left`;
-                    pgOption.disabled = false; // Ensure enabled
-                }
-            } catch (error) {
-                console.error("Slot check failed", error);
-            }
-        }
-
-        function setupTeamNameValidation() {
-            const teamInput = document.querySelector('input[name="team_name"]');
-            const feedback = document.getElementById('team-name-feedback');
-            let timeout = null;
-
-            if (!teamInput || !feedback) return;
-
-            teamInput.addEventListener('input', () => {
-                const name = teamInput.value.trim();
-
-                // Clear previous timeout
-                clearTimeout(timeout);
-
-                // Reset feedback
-                feedback.innerText = '';
-                feedback.style.color = '';
-                teamInput.style.borderColor = '';
-
-                if (name.length < 3) return;
-
-                // Debounce
-                timeout = setTimeout(async () => {
-                    feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking availability...';
-                    feedback.style.color = '#aaa';
-
-                    try {
-                        const response = await fetch(`${API_CONFIG.BASE_URL}/api/check-team-availability/${encodeURIComponent(name)}`);
-                        // Handle possible non-JSON response related to server issues
-                        if (!response.ok) { console.error('Availability check failed'); return; }
-
-                        const result = await response.json();
-
-                        if (result.available) {
-                            feedback.innerHTML = '<i class="fa-solid fa-check"></i> Squadron Name Available';
-                            feedback.style.color = '#0f0';
-                            teamInput.style.borderColor = '#0f0';
-                        } else {
-                            feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Squadron Name Taken (Already Registered)';
-                            feedback.style.color = '#ff4444';
-                            teamInput.style.borderColor = '#ff4444';
-                        }
-                    } catch (err) {
-                        console.error("Check failed", err);
-                    }
-                }, 500);
-            });
-        }
 
         // Hamburger
         const hamburger = document.querySelector('.hamburger');
@@ -241,77 +128,5 @@
                 navLinks.classList.toggle('active');
             });
         }
-
-        // Success Modal Logic
-        function showSuccess(message, redirectUrl) {
-            const modal = document.getElementById('success-modal');
-            const content = modal.querySelector('.success-content');
-            const textElement = document.getElementById('success-text');
-
-            textElement.innerText = message;
-            modal.style.display = 'flex';
-
-            // Animate In
-            gsap.to(content, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" });
-
-            // Redirect after delay
-            setTimeout(() => {
-                window.location.href = redirectUrl;
-            }, 2500);
-        }
-
-        // Signup Logic
-        const signupForm = document.getElementById('signupForm');
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = signupForm.querySelector('button');
-            const originalText = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "Creating Account...";
-
-            const formData = new FormData(signupForm);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                // Send to Backend
-                const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const responseText = await response.text();
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    console.error("Non-JSON response:", responseText);
-                    alert("Server Error: Response was not JSON.");
-                    throw new Error("Server Error: Response was not JSON.");
-                }
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Server error');
-                }
-
-                if (result.success) {
-                    // Auto-Login
-                    if (result.user) {
-                        localStorage.setItem('solveathon_user', JSON.stringify(result.user));
-                        showSuccess("Account Created! Proceeding to Mission Enlistment...", 'register.html');
-                    } else {
-                        showSuccess("Account Created! Please login.", 'user_login.html');
-                    }
-                } else {
-                    alert(result.message);
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Error: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            }
-        });
     </script>
 </body>

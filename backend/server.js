@@ -101,6 +101,10 @@ const requireAdmin = (req, res, next) => {
 app.post('/api/auth/signup', async (req, res) => {
     try {
         console.log('Signup Request Body:', req.body);
+
+        // SIGNUP CLOSED
+        return res.status(400).json({ success: false, message: "Registration Closed." });
+
         const { team_name, college_name, leader_name, email, password, category } = req.body;
 
         // Check user
@@ -203,6 +207,10 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
             transaction_id
         } = req.body;
 
+        // ALL REGISTRATIONS CLOSED
+        return res.status(400).json({ message: 'Registration for Mission Solve-A-Thon 1.0 is officially CLOSED for all categories.' });
+
+        /*
         // Slot Check for PG
         if (category === 'PG') {
             const pgCount = await Registration.countDocuments({ category: 'PG' });
@@ -210,6 +218,7 @@ app.post('/api/register', upload.single('payment_screenshot'), async (req, res) 
                 return res.status(400).json({ message: 'Registration for Commander League (PG) is closed due to full capacity (Max 100 Slots).' });
             }
         }
+        */
 
         if (!user_id) {
             return res.status(400).json({ message: 'User ID is required' });
