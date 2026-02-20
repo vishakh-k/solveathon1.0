@@ -229,6 +229,91 @@
             });
         }
 
+        const problemStatements = {
+            UG: `
+                <div class="problem-content" style="text-align: left;">
+                    <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-family: var(--font-heading); text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);">Departmental Digital Resource & Knowledge Hub</h2>
+                    <p style="margin-bottom: 1.5rem; color: #ddd; font-size: 1.1rem;">Currently, academic resources (notes, question banks, textbooks) are scattered across WhatsApp and emails, leading to fragmentation and misinformation. The objective is to build a centralized Web Portal—similar to the DHI or College ERP interface—that serves as a digital library and notice board for the department.</p>
+                    
+                    <h3 style="color: var(--secondary-color); margin-top: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">User Roles (The Actors)</h3>
+                    <ul style="list-style: none; padding-left: 0; color: #ccc; margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <li style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;"><i class="fa-solid fa-user-shield" style="color: var(--primary-color); margin-right: 10px;"></i> <strong>The Admin (HOD):</strong> Super User who oversees the entire system.</li>
+                        <li style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;"><i class="fa-solid fa-chalkboard-user" style="color: var(--primary-color); margin-right: 10px;"></i> <strong>Faculty:</strong> Content Creators and Approvers.</li>
+                        <li style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;"><i class="fa-solid fa-user-graduate" style="color: var(--primary-color); margin-right: 10px;"></i> <strong>Students:</strong> Consumers and Contributors.</li>
+                    </ul>
+
+                    <h3 style="color: var(--secondary-color); margin-top: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Module Breakdown</h3>
+                    <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem;">
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">1. Authentication & Security Module</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">Student Registration with USN, Name, Semester. Secure login for all three roles. Validation to prevent duplicate accounts.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">2. The "Smart Repository" (Upload & Download)</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">Supported Formats: PDF, PPT/PPTX, DOC/DOCX, JPG/PNG. Faculty uploads bypass approval. Student uploads enter "Pending Approval" state.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">3. The "Gatekeeper" System (Admin Approval)</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">HOD/Faculty review student uploads. Approve (Publish) or Reject (Delete). Only approved files appear in search.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">4. Advanced Search & Filtering Engine</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">Filter by Subject Code, Semester, and Professor. Outcome: A clean grid view of files matching criteria.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">5. Digital Notice Board</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">Dedicated section for "Department Circulars". Urgent notices highlighted in different colors/tags for 24 hours.</p>
+                        </div>
+                    </div>
+                     <div style="margin-top: 2rem; padding: 1rem; background: rgba(0, 243, 255, 0.1); border-radius: 8px; border: 1px solid var(--primary-color);">
+                        <p style="color: #fff; font-style: italic;"><i class="fa-solid fa-star" style="color: var(--primary-color); margin-right: 5px;"></i> <strong>Bonus Features:</strong> Students are encouraged to implement advanced features to distinguish their project and gain bonus points.</p>
+                    </div>
+                </div>
+            `,
+            PG: `
+                <div class="problem-content" style="text-align: left;">
+                    <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-family: var(--font-heading); text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);">"PlacementPro" – The Integrated Campus Career Suite</h2>
+                    <p style="margin-bottom: 1.5rem; color: #ddd; font-size: 1.1rem;">A Role-Based Web Application that acts as the central brain for the college's placement activities. Replaces Excel sheets with a dynamic database and notice boards with real-time dashboards.<br><strong>Target Platform:</strong> Web Application (Priority) + Mobile App (Optional Bonus).</p>
+                    
+                    <h3 style="color: var(--secondary-color); margin-top: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Application Architecture</h3>
+                    
+                    <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem;">
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">1. The Placement Officer (TPO) Admin Dashboard</h4>
+                            <ul style="list-style: none; padding: 0; color: #aaa; font-size: 0.95rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>The Criteria Engine:</strong> Enter constraints (CGPA, Backlogs, Branch). Query student database instantly. One-click "Notify All Eligible".</li>
+                                <li><strong>Interview Scheduler:</strong> Drag-and-drop calendar to assign interview slots.</li>
+                            </ul>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">2. The Student Application</h4>
+                            <ul style="list-style: none; padding: 0; color: #aaa; font-size: 0.95rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>Resume Wizard:</strong> Generate standardized, college-branded PDF resumes from profile data.</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Live Feed:</strong> Personalized feed showing only eligible companies.</li>
+                                <li><strong>Application Tracker:</strong> Status indicators (Applied, Aptitude, Interview, Selected).</li>
+                            </ul>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">3. The Alumni "Connect" Portal</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;"><strong>Job Referral Board:</strong> Alumni post job openings. <strong>Mentorship Slots:</strong> Alumni set available hours for guidance.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">4. "Market Intelligence" & Analytics Dashboard</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;"><strong>Skill Gap Analysis:</strong> Compares student profile against real market data to recommend learning paths.</p>
+                        </div>
+                        <div class="glass-panel" style="padding: 1.5rem; border-left: 3px solid var(--primary-color);">
+                            <h4 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">5. "PlacementBot" (Virtual Career Assistant)</h4>
+                            <p style="font-size: 0.95rem; color: #aaa;">Automates replies for common queries like cutoffs, interview dates, venues, etc.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 1rem; background: rgba(0, 243, 255, 0.1); border-radius: 8px; border: 1px solid var(--primary-color);">
+                        <p style="color: #fff; font-style: italic;"><i class="fa-solid fa-star" style="color: var(--primary-color); margin-right: 5px;"></i> <strong>Bonus Features:</strong> Implement advanced features like Mobile App integration to distinguish your project.</p>
+                    </div>
+                </div>
+            `
+        };
+
         function selectTrack(track) {
             const container = document.getElementById('problems-container');
             const title = document.getElementById('selected-track-title');
@@ -237,6 +322,34 @@
 
             container.style.display = 'block';
             title.innerText = track === 'UG' ? "Cadet League Problem Statements (BCA/BSc)" : "Commander League Problem Statements (MCA/Msc/BE)";
+
+            // Look for existing content area or create it
+            let contentArea = document.getElementById('generated-problem-content');
+
+            // Clear previous placeholder or content
+            // We want to keep the title, so we append the content after the title
+            // Check if we already have the content div
+            if (!contentArea) {
+                contentArea = document.createElement('div');
+                contentArea.id = 'generated-problem-content';
+                container.appendChild(contentArea);
+
+                // Hide the default placeholder if it exists
+                const placeholder = container.querySelector('div[style*="dashed"]');
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+            }
+
+            contentArea.innerHTML = problemStatements[track];
+
+            // Animate it in
+            gsap.from(contentArea, {
+                y: 20,
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.out"
+            });
 
         }
 
