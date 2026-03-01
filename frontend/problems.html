@@ -116,12 +116,8 @@
         <ul class="nav-links">
             <li><a href="index.html#home">Home</a></li>
             <li><a href="index.html#about">About</a></li>
-            <!-- New Problems Link -->
-            <li><a href="problems.html" class="active-page" style="color: var(--primary-color);">Problem Statements</a>
-            </li>
-            <li><a href="index.html#events">Events</a></li>
-            <li><a href="user_login.html">Login</a></li>
-            <li><a href="user_register.html" class="nav-btn">Join Mission</a></li>
+            <li><a href="index.html#events">Timeline</a></li>
+            <li><a href="problems.html" class="nav-btn">View Problems</a></li>
         </ul>
         <div class="hamburger">
             <span class="bar"></span>
@@ -133,12 +129,17 @@
     <!-- Main Section -->
     <section id="track-selection">
         <div class="container">
-            <h2 class="section-title">Mission Objectives</h2>
-            <p class="subtitle" style="font-size: 1.2rem; letter-spacing: 3px; color: var(--secondary-color);">Select
-                Your Track</p>
+            <h2 class="section-title">Mission Archives</h2>
+            <p class="subtitle" style="font-size: 1.2rem; letter-spacing: 3px; color: var(--secondary-color);">
+                Solve-A-Thon 1.0 Problem Statements</p>
 
-            <!-- Navbar-style Track Selection -->
-            <!-- Dropdown-style Track Selection -->
+            <div class="completion-banner"
+                style="background: rgba(0, 243, 255, 0.1); border: 1px solid var(--primary-color); padding: 15px; border-radius: 50px; margin: 0 auto 30px; max-width: 600px;">
+                <p style="color: #fff; margin: 0; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif;">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--primary-color);"></i>
+                    Historical Records: These challenges were tackled by participants on Feb 20, 2026.
+                </p>
+            </div>
             <div style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
                 <select id="track-select" onchange="selectTrack(this.value)" style="
                     width: 100%;

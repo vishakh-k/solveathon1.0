@@ -121,11 +121,24 @@ body::before {
     0%,
     100% {
         opacity: 1;
+        transform: scale(1);
     }
 
     50% {
-        opacity: 0.5;
+        opacity: 0.8;
+        transform: scale(1.02);
     }
+}
+
+.completion-banner {
+    animation: pulse 2s infinite ease-in-out;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+    transition: 0.3s;
+}
+
+.completion-banner:hover {
+    background: rgba(0, 243, 255, 0.2) !important;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
 }
 
 /* Navbar Styles */
